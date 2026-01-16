@@ -15,41 +15,27 @@ body {
   overflow: hidden;
 }
 
-#boot {
-  position: fixed;
-  inset: 0;
-  padding: 30px;
-  white-space: pre-line;
-  font-size: 14px;
-}
-
-#login {
-  display: none;
+#boot, #login, #filesystem {
   position: fixed;
   inset: 0;
   padding: 40px;
 }
+
+#login, #filesystem, #system { display: none; }
 
 input, button {
   background: black;
   color: white;
   border: 1px solid white;
   padding: 8px;
-  width: 300px;
   font-family: inherit;
-}
-
-button {
-  width: auto;
-  cursor: pointer;
 }
 
 button:hover {
   background: white;
   color: black;
+  cursor: pointer;
 }
-
-#system { display: none; height: 100vh; }
 
 header {
   border-bottom: 2px solid white;
@@ -81,18 +67,19 @@ main {
 .section { display: none; }
 .section.active { display: block; }
 
-.warning {
-  border: 1px solid white;
-  padding: 10px;
-  margin-bottom: 20px;
-}
+.file { cursor: pointer; }
+.file.locked { color: gray; cursor: not-allowed; }
+.file:hover:not(.locked) { background: white; color: black; }
 
 .blink {
   animation: blink 1s steps(1) infinite;
 }
+@keyframes blink { 50% { opacity: 0; } }
 
-@keyframes blink {
-  50% { opacity: 0; }
+.pixandra {
+  width: 350px;
+  border: 2px solid white;
+  filter: grayscale(100%);
 }
 </style>
 </head>
@@ -101,46 +88,52 @@ main {
 
 <div id="boot"></div>
 
-<div id="splash" style="display:none; position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-  <h1>ORDER OF THE WHITE LOTUS</h1>
-  <button onclick="enterTerminal()">ACCESS TERMINAL</button>
-</div>
-
 <div id="login">
   <h2>OWL INTERNAL AUTHENTICATION</h2>
   <p>User ID:</p>
-  <input id="user" autocomplete="off">
+  <input id="user">
   <p>Clearance Key:</p>
   <input id="pass" type="password">
   <br><br>
   <button onclick="login()">AUTHENTICATE</button>
-  <p id="lockout" style="color:red;"></p>
+</div>
+
+<div id="filesystem">
+<pre>
+NODE:/ROOT/
+│
+├── ARCHIVES/           [LOCKED]
+├── OPERATIONS/         [REDACTED]
+├── PERSONNEL/
+│   └── DOSSIER_ELLIOT  <span class="file" onclick="enterSystem()">[OPEN]</span>
+├── BLACKSITE/          [NO ACCESS]
+└── system_core.sys     [DENIED]
+</pre>
 </div>
 
 <div id="system">
 <header>
 <b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>
-Clearance Verified
+Clearance: O3+ VERIFIED
 </header>
 
 <div class="container">
 <nav>
 <button onclick="show('file')">DOSSIER</button>
-<button onclick="show('logs')">SYSTEM LOGS</button>
+<button onclick="show('logs')">LOGS</button>
 </nav>
 
 <main>
 <div id="file" class="section active">
 <h2>SUBJECT DOSSIER</h2>
-<p>Name: Pixandra V. Elliot</p>
-<p>Status: ACTIVE</p>
+<img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra">
 </div>
 
 <div id="logs" class="section">
 <pre>
 [00:14] USER AUTHENTICATED
 [00:15] FILE DECRYPTED
-[00:16] CLEARANCE VERIFIED
+[00:18] SUBJECT OBSERVING OWN RECORD
 </pre>
 <span class="blink">█</span>
 </div>
@@ -152,55 +145,42 @@ Clearance Verified
 const bootText = `
 OWL SECURE NODE v3.17
 Initializing encrypted uplink...
-WARNING: UNAUTHORIZED ACCESS WILL BE MET WITH DEADLY FORCE
+Verifying integrity...
+ACCESS CONTROL ENABLED
 `;
 
 let i = 0;
-let attempts = 0;
-
 const boot = document.getElementById("boot");
-const splash = document.getElementById("splash");
-const loginScreen = document.getElementById("login");
 
 function bootSequence() {
   if (i < bootText.length) {
-    boot.textContent += bootText.charAt(i++);
-    setTimeout(bootSequence, 25);
+    boot.textContent += bootText[i++];
+    setTimeout(bootSequence, 20);
   } else {
     setTimeout(() => {
       boot.style.display = "none";
-      splash.style.display = "flex";
-    }, 700);
+      document.getElementById("login").style.display = "block";
+    }, 500);
   }
 }
 
 bootSequence();
 
-function enterTerminal() {
-  splash.style.display = "none";
-  loginScreen.style.display = "block";
+function login() {
+  const u = document.getElementById("user").value;
+  const p = document.getElementById("pass").value;
+
+  if (u === "pixelseee" && p === "ENDURE.") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("filesystem").style.display = "block";
+  } else {
+    alert("ACCESS DENIED");
+  }
 }
 
-function login() {
-  if (attempts >= 3) return;
-
-  const u = document.getElementById("user");
-  const p = document.getElementById("pass");
-  const msg = document.getElementById("lockout");
-
-  if (u.value === "pixelseee" && p.value === "ENDURE") {
-    loginScreen.style.display = "none";
-    document.getElementById("system").style.display = "block";
-  } else {
-    attempts++;
-    msg.textContent = `ACCESS DENIED (${attempts}/3)`;
-
-    if (attempts >= 3) {
-      msg.textContent = "TERMINAL LOCKED — CONTACT OWL COMMAND";
-      u.disabled = true;
-      p.disabled = true;
-    }
-  }
+function enterSystem() {
+  document.getElementById("filesystem").style.display = "none";
+  document.getElementById("system").style.display = "block";
 }
 
 function show(id) {
@@ -211,5 +191,3 @@ function show(id) {
 
 </body>
 </html>
-
-
