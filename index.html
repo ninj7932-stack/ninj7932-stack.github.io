@@ -1,176 +1,275 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>OWL PERSONNEL FILE - PIXANDRA V. ELLIOT</title>
-    <style>
-        body {
-            background-color: black;
-            color: #0f0;
-            font-family: 'Courier New', monospace;
-            padding: 30px;
-            line-height: 1.4;
-        }
+<meta charset="UTF-8">
+<title>OWL SECURE INTRANET</title>
 
-        h1 {
-            text-align: center;
-            text-transform: uppercase;
-            border-bottom: 2px solid #0f0;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-        .clearance {
-            text-align: right;
-            font-size: 0.8em;
-            letter-spacing: 2px;
-            color: #ff0000;
-        }
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: "Courier New", monospace;
+  overflow: hidden;
+}
 
-        .box {
-            border: 1px solid #0f0;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 900px;
-            background-color: rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
+/* BOOT SCREEN */
+#boot {
+  position: fixed;
+  inset: 0;
+  padding: 30px;
+  white-space: pre-line;
+  font-size: 14px;
+}
 
-        button {
-            background-color: black;
-            color: #0f0;
-            border: 1px solid #0f0;
-            padding: 8px 12px;
-            margin: 10px 0;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-        }
+/* LOGIN */
+#login {
+  display: none;
+  position: fixed;
+  inset: 0;
+  padding: 40px;
+}
 
-        button:hover {
-            background-color: #0f0;
-            color: black;
-        }
+input {
+  background: black;
+  color: white;
+  border: 1px solid white;
+  padding: 8px;
+  width: 300px;
+  font-family: inherit;
+}
 
-        .hidden {
-            display: none;
-        }
+button {
+  background: black;
+  color: white;
+  border: 1px solid white;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-family: inherit;
+}
 
-        .redacted {
-            background-color: #0f0;
-            color: #0f0;
-            border-radius: 2px;
-            padding: 0 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+button:hover {
+  background: white;
+  color: black;
+}
 
-        #terminal {
-            border: 1px solid #0f0;
-            padding: 15px;
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: rgba(0,0,0,0.8);
-            min-height: 300px;
-            white-space: pre-wrap;
-        }
+/* MAIN SYSTEM */
+#system {
+  display: none;
+  height: 100vh;
+}
 
-        .cursor {
-            display: inline-block;
-            background-color: #0f0;
-            width: 8px;
-            animation: blink 1s infinite;
-        }
+header {
+  border-bottom: 2px solid white;
+  padding: 15px;
+}
 
-        @keyframes blink {
-            0%,50%,100% {opacity: 1;}
-            25%,75% {opacity: 0;}
-        }
-    </style>
+.container {
+  display: flex;
+  height: calc(100vh - 70px);
+}
+
+nav {
+  width: 240px;
+  border-right: 2px solid white;
+  padding: 15px;
+}
+
+nav button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+main {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.redacted {
+  background: white;
+  color: white;
+  padding: 0 6px;
+}
+
+.warning {
+  border: 1px solid white;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+/* BLINK */
+.blink {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+</style>
 </head>
+
 <body>
 
-<h1>SECURE PERSONNEL FILE</h1>
-<div class="clearance">CLEARANCE LEVEL: TOP SECRET</div>
+<div id="boot"></div>
 
-<div class="box">
-    <h2>IDENTIFICATION</h2>
-    <p><b>Name:</b> Pixandra V. Elliot</p>
-    <p><b>Codename:</b> Pixion</p>
-    <p><b>Affiliation:</b> OWL</p>
-    <p><b>Status:</b> Active</p>
-    <p><b>Assignment:</b> Masquerade Operative</p>
+<div id="login">
+  <h2>OWL INTERNAL AUTHENTICATION</h2>
+  <p>User ID:</p>
+  <input id="user" placeholder="pixelseee">
+  <p>Clearance Key:</p>
+  <input id="pass" type="ENDURE." placeholder="*******">
+  <br><br>
+  <button onclick="login()">AUTHENTICATE</button>
 </div>
 
-<div class="box section">
-    <button onclick="revealText('background')">Toggle Background & Notes</button>
-    <div id="background" class="hidden">
-        <div id="terminal"></div>
-    </div>
-</div>
+<div id="system">
+  <header>
+    <b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>
+    Clearance: O3+ VERIFIED | STATUS: ACTIVE
+  </header>
 
-<div class="box section">
-    <button onclick="revealText('missions')">Toggle Missions / Operations</button>
-    <div id="missions" class="hidden">
-        <div id="terminal2"></div>
-    </div>
+  <div class="container">
+    <nav>
+      <button onclick="show('file')">DOSSIER</button>
+      <button onclick="show('psych')">LORE</button>
+      <button onclick="show('ops')">OPERATIONS</button>
+      <button onclick="show('warnings')">WARNINGS</button>
+      <button onclick="show('logs')">SYSTEM LOGS</button>
+    </nav>
+
+    <main>
+
+      <div id="file" class="section active">
+        <h2>SUBJECT DOSSIER</h2>
+        <p><b>Name:</b> Pixandra V. Elliot</p>
+        <p><b>Callsign:</b> PIXELSEEE</p>
+        <p><b>Rank:</b> [O2] First Lieutenant</p>
+        <p><b>Faction:</b> Order of the White Lotus</p>
+        <p><b>Status:</b> ACTIVE.</p>
+        <p><b>Notes:</b> Subject displays unusually high loyalty to the Order's doctrine.</p>
+      </div>
+
+      <div id="psych" class="section">
+        <h2>LORE</h2>
+        <div class="warning">
+          WARNING: DO NOT DISCLOSE THIS OUTSIDE OF OFFICERS VIEW.
+        </div>
+        <p>Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. 
+            The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. 
+            
+            No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. 
+            With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. 
+            Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. 
+            
+            While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. 
+            What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). 
+            The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. 
+            No surviving branches. No traceable members. 
+            
+            Except for one name listed at the end of the document: Polaris Inc. 
+            
+            With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. 
+            She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. 
+            Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). 
+            She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. 
+            She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. 
+            
+            Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,
+            Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
+        <p>Attachment triggers: <span class="redacted">Failing.</span></p>
+      </div>
+
+      <div id="ops" class="section">
+        <h2>OPERATIONAL HISTORY</h2>
+        <ul>
+          <li>Bioweapon Acquisition Directive — UNRESOLVED</li>
+          <li>Masquerade Enforcement — SITE-416
+                                       OUTPOST SOLICE
+                                       FORT CONDOR</li>
+          <li>Conclave Surveillance — CONCLUDED, THE COCLAVE HAS OFFICIALLY BEEN DISBANDED</li>
+          <li>THE "verrostetes eisen" INCIDENT — UNRESOLVED</li>
+            <li>CODENAME "Krune" Trial - UNRESOLVED</li>
+        </ul>
+      </div>
+
+      <div id="warnings" class="section">
+        <h2>INTERNAL WARNINGS</h2>
+        <div class="warning">
+          ANY INFORMATION READ SO FAR IS NOT TO BE DISCLOSED TO THE PUBLIC EYE.
+        </div>
+        <div class="warning">
+          ANY LEAK WILL PUT YOU IN A STATE OF ABSOLUTE MORALITY RATE
+        </div>
+      </div>
+
+      <div id="logs" class="section">
+        <h2>SYSTEM LOG</h2>
+        <pre>
+[00:14] USER AUTHENTICATED
+[00:15] FILE DECRYPTED
+[00:16] CLEARANCE VERIFIED
+[00:17] WATCHLIST FLAG — DISMISSED
+[00:18] SUBJECT OBSERVING OWN RECORD
+        </pre>
+        <span class="blink">█</span>
+      </div>
+
+    </main>
+  </div>
 </div>
 
 <script>
-    const backgroundText = `Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England...
-At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities...
-While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as [REDACTED].
-Except for one name listed at the end of the document: [REDACTED].
-After working with them, she realised that The Order of the White Lotus was the ideological successor and more civilized version of The New Order...
+const bootText = `
+OWL SECURE NODE v3.17
+Initializing encrypted uplink...
+Verifying hardware integrity...
+Loading doctrine modules...
+Establishing blacksite tunnel...
+WARNING: UNAUTHORIZED ACCESS WILL BE MET WITH DEADLY FORCE
 `;
 
-    const missionsText = `Deployment: Fort Candor
-Role: Masquerade asset / reconnaissance
-Incident Logs: [REDACTED]
-Performance: Exceeded expectations. Precision and absolute commitment noted in every mission report.
-`;
+let i = 0;
+const boot = document.getElementById("boot");
 
-    // Typing effect function
-    function typeEffect(elementId, text, speed=20) {
-        const el = document.getElementById(elementId);
-        el.innerHTML = '';
-        let i = 0;
-        function typing() {
-            if (i < text.length) {
-                if(text[i] === '[') {
-                    // Start redaction
-                    let redactedEnd = text.indexOf(']', i);
-                    let redactedText = text.slice(i, redactedEnd+1);
-                    el.innerHTML += `<span class="redacted" onclick="unlockRedaction(this)">${redactedText}</span>`;
-                    i = redactedEnd+1;
-                } else {
-                    el.innerHTML += text[i];
-                    i++;
-                }
-                setTimeout(typing, speed);
-            } else {
-                el.innerHTML += ' <span class="cursor"></span>';
-            }
-        }
-        typing();
-    }
+function bootSequence() {
+  if (i < bootText.length) {
+    boot.textContent += bootText.charAt(i);
+    i++;
+    setTimeout(bootSequence, 25);
+  } else {
+    setTimeout(() => {
+      boot.style.display = "none";
+      document.getElementById("login").style.display = "block";
+    }, 500);
+  }
+}
 
-    function revealText(id) {
-        const section = document.getElementById(id);
-        section.classList.remove('hidden');
-        if(id === 'background') typeEffect('terminal', backgroundText);
-        if(id === 'missions') typeEffect('terminal2', missionsText);
-    }
+bootSequence();
 
-    function unlockRedaction(element) {
-        const code = prompt("Enter clearance code:");
-        if(code === "PIXION") {
-            element.textContent = element.textContent.replace(/\[REDACTED\]/g, "Classified Info");
-            element.style.backgroundColor = 'black';
-            element.style.color = '#0f0';
-        } else {
-            alert("ACCESS DENIED");
-        }
-    }
+function login() {
+  document.getElementById("login").style.display = "none";
+  document.getElementById("system").style.display = "block";
+}
+
+function show(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
 </script>
 
 </body>
 </html>
+
