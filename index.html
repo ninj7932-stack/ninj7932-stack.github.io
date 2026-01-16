@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
+</script>
+  
 <head>
 <meta charset="UTF-8">
 <title>OWL SECURE INTRANET</title>
@@ -84,6 +88,20 @@
 
 </style>
 </head>
+  
+  <script>
+    // Remove boot screen after animation
+    setTimeout(() => {
+        const boot = document.getElementById("boot-screen");
+        boot.style.opacity = "0";
+        boot.style.transition = "opacity 1s ease";
+
+        setTimeout(() => {
+            boot.remove();
+        }, 1000);
+
+    }, 3000); // logo visible time
+</script>
 
 <body>
 
