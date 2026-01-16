@@ -15,25 +15,12 @@ body {
 }
 
 /* BOOT */
-#boot {
-  position: fixed;
-  inset: 0;
-  padding: 30px;
-  white-space: pre-line;
-  font-size: 14px;
-}
+<!-- BOOT / CRT -->
+<div id="boot" style="position:fixed;inset:0;background:black;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+  <img id="boot-logo" src="OWL LOGO.jpeg" style="width:300px;opacity:0;filter:grayscale(100%) contrast(140%);">
+  <pre id="boot-text" style="color:#00ffcc;margin-top:20px;font-size:14px;"></pre>
+</div>
 
-/* SPLASH */
-#splash {
-  display: none;
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  font-size: 16px;
-}
 
 /* LOGIN */
 #login {
@@ -174,8 +161,8 @@ Clearance: O3+ VERIFIED | STATUS: ACTIVE
 <div class="container">
 <nav>
 <button onclick="show('file1')">DOSSIER: ELLIOT</button>
-<button onclick="show('file2')">DOSSIER: POLARIS</button>
-<button onclick="show('ops')">OPERATIONS</button>
+<button onclick="show('file2')">DOSSIER: </button>
+<button onclick="show('ops')">SPECIAL OPERATIONS</button>
 <button onclick="show('dirs')">DIRECTORIES</button>
 <button onclick="show('logs')">SYSTEM LOG</button>
 </nav>
@@ -189,13 +176,13 @@ Clearance: O3+ VERIFIED | STATUS: ACTIVE
 <p><b>Rank:</b> O2</p>
 <p><b>Status:</b> ACTIVE</p>
 <p><b>Notes:</b> Loyalty index exceeds baseline.</p>
-  <p><b>BAGROUND SUMMARY:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc, Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
-</div>
+  <p><b>BACKGROUND SUMMARY</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc, Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
+  </div>
 
 <!-- FILE 2 -->
 <div id="file2" class="section">
-<h2>SUBJECT DOSSIER — GABREAL GHERMAN</h2>
-<p><b>Status:</b> <span class="redacted">CLASSIFIED</span></p>
+<h2>SUBJECT DOSSIER — OPERATIONS</h2>
+<p><b>Status:</b> <li></li></p>
 <p><b>Notes:</b> Sush.</p>
 </div>
 
