@@ -6,7 +6,6 @@
 
 <style>
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
   background: black;
@@ -15,26 +14,58 @@ body {
   overflow: hidden;
 }
 
-#boot, #login, #filesystem {
+/* BOOT */
+#boot {
+  position: fixed;
+  inset: 0;
+  padding: 30px;
+  white-space: pre-line;
+  font-size: 14px;
+}
+
+/* SPLASH */
+#splash {
+  display: none;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+/* LOGIN */
+#login {
+  display: none;
   position: fixed;
   inset: 0;
   padding: 40px;
 }
-
-#login, #filesystem, #system { display: none; }
 
 input, button {
   background: black;
   color: white;
   border: 1px solid white;
   padding: 8px;
+  width: 300px;
   font-family: inherit;
+}
+
+button {
+  width: auto;
+  cursor: pointer;
 }
 
 button:hover {
   background: white;
   color: black;
-  cursor: pointer;
+}
+
+/* SYSTEM */
+#system {
+  display: none;
+  height: 100vh;
 }
 
 header {
@@ -48,7 +79,7 @@ header {
 }
 
 nav {
-  width: 240px;
+  width: 260px;
   border-right: 2px solid white;
   padding: 15px;
 }
@@ -67,122 +98,219 @@ main {
 .section { display: none; }
 .section.active { display: block; }
 
-.file { cursor: pointer; }
-.file.locked { color: gray; cursor: not-allowed; }
-.file:hover:not(.locked) { background: white; color: black; }
+.redacted {
+  background: white;
+  color: white;
+  padding: 0 6px;
+}
 
+.warning {
+  border: 1px solid white;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+/* PROGRESS BAR */
+.progress {
+  width: 100%;
+  border: 1px solid white;
+  height: 20px;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: white;
+}
+
+/* BLINK */
 .blink {
   animation: blink 1s steps(1) infinite;
 }
-@keyframes blink { 50% { opacity: 0; } }
+@keyframes blink {
+  50% { opacity: 0; }
+}
 
+/* DOSSIER IMAGE */
 .pixandra {
   width: 350px;
   border: 2px solid white;
-  filter: grayscale(100%);
+  filter: grayscale(100%) contrast(120%);
 }
 </style>
 </head>
 
 <body>
 
+<!-- BOOT -->
 <div id="boot"></div>
 
-<div id="login">
-  <h2>OWL INTERNAL AUTHENTICATION</h2>
-  <p>User ID:</p>
-  <input id="user">
-  <p>Clearance Key:</p>
-  <input id="pass" type="password">
-  <br><br>
-  <button onclick="login()">AUTHENTICATE</button>
-</div>
-
-<div id="filesystem">
+<!-- SPLASH -->
+<div id="splash">
 <pre>
-NODE:/ROOT/
-│
-├── ARCHIVES/           [LOCKED]
-├── OPERATIONS/         [REDACTED]
-├── PERSONNEL/
-│   └── DOSSIER_ELLIOT  <span class="file" onclick="enterSystem()">[OPEN]</span>
-├── BLACKSITE/          [NO ACCESS]
-└── system_core.sys     [DENIED]
+██████╗ ██████╗ ██╗     
+██╔══██╗██╔══██╗██║     
+██████╔╝██████╔╝██║     
+██╔═══╝ ██╔═══╝ ██║     
+██║     ██║     ███████╗
+╚═╝     ╚═╝     ╚══════╝
+ORDER OF THE WHITE LOTUS
 </pre>
+<p>SECURE NODE ESTABLISHED</p>
 </div>
 
+<!-- LOGIN -->
+<div id="login">
+<h2>OWL INTERNAL AUTHENTICATION</h2>
+<p>User ID:</p>
+<input id="user">
+<p>Clearance Key:</p>
+<input id="pass" type="password">
+<br><br>
+<button onclick="login()">AUTHENTICATE</button>
+<p id="lockMsg"></p>
+</div>
+
+<!-- SYSTEM -->
 <div id="system">
 <header>
 <b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>
-Clearance: O3+ VERIFIED
+Clearance: O3+ VERIFIED | STATUS: ACTIVE
 </header>
 
 <div class="container">
 <nav>
-<button onclick="show('file')">DOSSIER</button>
-<button onclick="show('logs')">LOGS</button>
+<button onclick="show('file1')">DOSSIER: ELLIOT</button>
+<button onclick="show('file2')">DOSSIER: POLARIS</button>
+<button onclick="show('ops')">OPERATIONS</button>
+<button onclick="show('dirs')">DIRECTORIES</button>
+<button onclick="show('logs')">SYSTEM LOG</button>
 </nav>
 
 <main>
-<div id="file" class="section active">
-<h2>SUBJECT DOSSIER</h2>
+
+<!-- FILE 1 -->
+<div id="file1" class="section active">
+<h2>SUBJECT DOSSIER — PIXANDRA V. ELLIOT</h2>
 <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra">
+<p><b>Rank:</b> O2</p>
+<p><b>Status:</b> ACTIVE</p>
+<p><b>Notes:</b> Loyalty index exceeds baseline.</p>
 </div>
 
+<!-- FILE 2 -->
+<div id="file2" class="section">
+<h2>SUBJECT DOSSIER — POLARIS</h2>
+<p><b>Status:</b> <span class="redacted">CLASSIFIED</span></p>
+<p><b>Notes:</b> The Messenger. Do not attempt containment.</p>
+</div>
+
+<!-- OPS -->
+<div id="ops" class="section">
+<h2>DECRYPTING OPERATIONAL FILES</h2>
+
+<div class="progress"><div class="progress-bar" id="bar1"></div></div>
+<div class="progress"><div class="progress-bar" id="bar2"></div></div>
+<div class="progress"><div class="progress-bar" id="bar3"></div></div>
+
+<p>Decrypting ██████████▒▒▒▒▒▒▒▒</p>
+</div>
+
+<!-- DIRS -->
+<div id="dirs" class="section">
+<h2>ROOT DIRECTORY</h2>
+<ul>
+<li>/OWL/ (ACCESS GRANTED)</li>
+<li>/FOUNDATION/ <span class="redacted">LOCKED</span></li>
+<li>/CONCLAVE/ <span class="redacted">PURGED</span></li>
+</ul>
+</div>
+
+<!-- LOGS -->
 <div id="logs" class="section">
 <pre>
 [00:14] USER AUTHENTICATED
-[00:15] FILE DECRYPTED
-[00:18] SUBJECT OBSERVING OWN RECORD
+[00:15] DECRYPTION IN PROGRESS
+[00:16] FOUNDATION DIRECTORY FLAGGED
+[00:17] OBSERVER IS SUBJECT
 </pre>
 <span class="blink">█</span>
 </div>
+
 </main>
 </div>
 </div>
 
+<audio id="beep" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
+
 <script>
-const bootText = `
-OWL SECURE NODE v3.17
+/* BOOT TEXT */
+const bootText =
+`OWL SECURE NODE v3.17
 Initializing encrypted uplink...
-Verifying integrity...
-ACCESS CONTROL ENABLED
-`;
+Loading doctrine modules...
+WARNING: UNAUTHORIZED ACCESS WILL BE MET WITH DEADLY FORCE`;
 
 let i = 0;
 const boot = document.getElementById("boot");
+const beep = document.getElementById("beep");
 
 function bootSequence() {
   if (i < bootText.length) {
-    boot.textContent += bootText[i++];
-    setTimeout(bootSequence, 20);
+    boot.textContent += bootText.charAt(i);
+    if (bootText.charAt(i) !== " ") beep.play();
+    i++;
+    setTimeout(bootSequence, 25);
   } else {
     setTimeout(() => {
       boot.style.display = "none";
-      document.getElementById("login").style.display = "block";
+      document.getElementById("splash").style.display = "flex";
+      setTimeout(() => {
+        document.getElementById("splash").style.display = "none";
+        document.getElementById("login").style.display = "block";
+      }, 2000);
     }, 500);
   }
 }
-
 bootSequence();
 
+/* LOGIN + LOCKOUT */
+let attempts = 0;
 function login() {
-  const u = document.getElementById("user").value;
-  const p = document.getElementById("pass").value;
+  const u = user.value;
+  const p = pass.value;
 
-  if (u === "pixelseee" && p === "ENDURE.") {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("filesystem").style.display = "block";
-  } else {
-    alert("ACCESS DENIED");
+  if (attempts >= 3) {
+    lockMsg.textContent = "TERMINAL LOCKED";
+    return;
   }
+
+  if (u !== "pixelseee" || p !== "ENDURE") {
+    attempts++;
+    lockMsg.textContent = "ACCESS DENIED (" + attempts + "/3)";
+    return;
+  }
+
+  login.style.display = "none";
+  system.style.display = "block";
+  startDecrypt();
 }
 
-function enterSystem() {
-  document.getElementById("filesystem").style.display = "none";
-  document.getElementById("system").style.display = "block";
+/* DECRYPT */
+function startDecrypt() {
+  let bars = [bar1, bar2, bar3];
+  bars.forEach((bar, i) => {
+    let w = 0;
+    let interval = setInterval(() => {
+      w += Math.random() * 5;
+      bar.style.width = w + "%";
+      if (w >= 100) clearInterval(interval);
+    }, 100 + i * 50);
+  });
 }
 
+/* NAV */
 function show(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
