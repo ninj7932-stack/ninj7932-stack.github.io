@@ -155,9 +155,35 @@ main {
         <h2>SUBJECT DOSSIER</h2>
         <p><b>Name:</b> Pixandra V. Elliot</p>    
        
-        <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" 
-     style="width:250px; height:auto; border:2px solid white;" 
-     class="pixandra">
+        <!-- OWL Dossier Image -->
+<div class="dossier-image">
+    <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" alt="Pixandra V. Elliot" class="pixandra">
+</div>
+
+<style>
+/* Dossier image container */
+.dossier-image {
+    text-align: center; /* centers the image */
+    margin: 20px 0;
+}
+
+/* Image styling */
+.pixandra {
+    width: 250px;          /* width in pixels */
+    height: auto;          /* keeps proportions */
+    border: 2px solid white;
+    filter: grayscale(100%) contrast(120%); /* black & white + pop */
+    transition: transform 0.3s ease, filter 0.3s ease; /* smooth hover effect */
+}
+
+/* Hover effect for style */
+.pixandra:hover {
+    transform: scale(1.05);        /* tiny zoom */
+    filter: grayscale(0%) contrast(140%); /* momentarily colored + high contrast */
+    cursor: pointer;
+}
+</style>
+
 
        
         <p><b>Callsign:</b> PIXELSEEE</p>
