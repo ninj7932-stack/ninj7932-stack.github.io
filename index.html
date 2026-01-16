@@ -6,6 +6,43 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:black;color:white;font-family:"Courier New",monospace;overflow:hidden}
 
+  /* Full boot screen */
+#boot-screen {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Logo */
+#boot-logo {
+    width: 220px;
+    opacity: 0;
+    transform: scale(0.85);
+    animation: logoBoot 2.5s ease-out forwards;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.3));
+}
+
+/* Windows-style fade + scale */
+@keyframes logoBoot {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
 /* CRT SCANLINES & FLICKER */
 @keyframes crtFlicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,22%,24%,55%{opacity:0.7}}
 @keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(2px,-2px)}50%{transform:translate(-2px,2px)}75%{transform:translate(1px,-1px)}100%{transform:translate(0,0)}}
@@ -42,9 +79,28 @@
 /* EXTRA PROGRESS BAR FLAIR */
 .spark{position:absolute;width:2px;height:100%;background:white;opacity:0.2;animation:sparkAnim 0.3s infinite}
 @keyframes sparkAnim{0%{opacity:0.1}50%{opacity:0.8}100%{opacity:0.1}}
+
+   <script>
+    // Remove boot screen after animation
+    setTimeout(() => {
+        const boot = document.getElementById("boot-screen");
+        boot.style.opacity = "0";
+        boot.style.transition = "opacity 1s ease";
+
+        setTimeout(() => {
+            boot.remove();
+        }, 1000);
+
+    }, 3000); // logo visible time
+</script>
+
 </style>
 </head>
 <body>
+
+  <div id="boot-screen">
+    <img src="OWL LOGO.jpeg" id="boot-logo" alt="OWL Logo">
+</div>
 
 <!-- BOOT -->
 <div id="boot">
@@ -227,6 +283,7 @@ function startDecrypt(){
     },100+i*50);
   });
 }
+ 
 
 /* NAV */
 function show(id){
