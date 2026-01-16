@@ -6,9 +6,15 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:black;color:white;font-family:"Courier New",monospace;overflow:hidden}
+body{
+  margin:0;
+  background:black;
+  color:white;
+  font-family:"Courier New",monospace;
+  overflow:hidden
+}
 
-/* WINDOWS-STYLE BOOT SCREEN */
+/* ================= BOOT SCREEN ================= */
 #boot-screen{
   position:fixed;
   inset:0;
@@ -33,11 +39,14 @@ body{margin:0;background:black;color:white;font-family:"Courier New",monospace;o
   100%{opacity:1;transform:scale(1)}
 }
 
-/* CRT EFFECTS */
-@keyframes crtFlicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,22%,24%,55%{opacity:0.7}}
-@keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(2px,-2px)}50%{transform:translate(-2px,2px)}75%{transform:translate(1px,-1px)}100%{transform:translate(0,0)}}
+/* ================= CRT EFFECTS ================= */
+@keyframes crtFlicker{
+  0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}
+  20%,22%,24%,55%{opacity:0.7}
+}
+@keyframes blink{50%{opacity:0}}
 
-/* SPLASH */
+/* ================= SPLASH ================= */
 #splash{
   display:none;
   position:fixed;
@@ -48,13 +57,14 @@ body{margin:0;background:black;color:white;font-family:"Courier New",monospace;o
   animation:crtFlicker 0.15s infinite;
 }
 
-/* LOGIN */
+/* ================= LOGIN ================= */
 #login{
   display:none;
   position:fixed;
   inset:0;
   padding:40px;
 }
+
 input,button{
   background:black;
   color:white;
@@ -63,29 +73,66 @@ input,button{
   width:300px;
   font-family:inherit;
 }
+
 button{cursor:pointer}
 button:hover{background:white;color:black}
 
-/* SYSTEM */
-#system{display:none;height:100vh;animation:crtFlicker 0.2s infinite}
-header{border-bottom:2px solid white;padding:15px}
-.container{display:flex;height:calc(100vh - 70px)}
-nav{width:260px;border-right:2px solid white;padding:15px}
-nav button{width:100%;margin-bottom:10px}
-main{flex:1;padding:25px;overflow-y:auto}
+/* ================= SYSTEM ================= */
+#system{
+  display:none;
+  height:100vh;
+  animation:crtFlicker 0.2s infinite
+}
+
+header{
+  border-bottom:2px solid white;
+  padding:15px
+}
+
+.container{
+  display:flex;
+  height:calc(100vh - 70px)
+}
+
+nav{
+  width:260px;
+  border-right:2px solid white;
+  padding:15px
+}
+
+nav button{
+  width:100%;
+  margin-bottom:10px
+}
+
+main{
+  flex:1;
+  padding:25px;
+  overflow-y:auto
+}
+
 .section{display:none}
 .section.active{display:block}
 
 .redacted{background:white;color:white;padding:0 6px}
-.progress{width:100%;border:1px solid white;height:20px;margin-bottom:10px}
-.progress-bar{height:100%;width:0%;background:white}
-.blink{animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
+
+.progress{
+  width:100%;
+  border:1px solid white;
+  height:20px;
+  margin-bottom:10px
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:white
+}
 
 .pixandra{
   width:350px;
   border:2px solid white;
-  filter:grayscale(100%) contrast(120%);
+  filter:grayscale(100%) contrast(120%)
 }
 
 .log-stream{
@@ -94,37 +141,39 @@ main{flex:1;padding:25px;overflow-y:auto}
   border:1px solid white;
   padding:5px;
   margin-top:10px;
-  font-size:12px;
+  font-size:12px
 }
+
 .hidden{color:black;background:black}
+.blink{animation:blink 1s steps(1) infinite}
 </style>
 </head>
 
 <body>
 
-<!-- WINDOWS BOOT -->
+<!-- ================= BOOT ================= -->
 <div id="boot-screen">
   <img src="OWL LOGO.jpeg" id="boot-logo" alt="OWL Logo">
 </div>
 
-<!-- SPLASH -->
+<!-- ================= SPLASH ================= -->
 <div id="splash">
   <img src="OWL LOGO.jpeg" style="width:300px;filter:grayscale(100%) contrast(140%)">
   <p>SECURE NODE ESTABLISHED</p>
 </div>
 
-<!-- LOGIN -->
+<!-- ================= LOGIN ================= -->
 <div id="login">
   <h2>OWL INTERNAL AUTHENTICATION</h2>
   <p>User ID:</p>
   <input id="user">
   <p>Clearance Key:</p>
   <input id="pass" type="password"><br><br>
-  <button onclick="login()">AUTHENTICATE</button>
+  <button id="loginBtn">AUTHENTICATE</button>
   <p id="lockMsg"></p>
 </div>
 
-<!-- SYSTEM -->
+<!-- ================= SYSTEM ================= -->
 <div id="system">
 <header>
 <b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>
@@ -194,18 +243,18 @@ Clearance: O3+ VERIFIED | STATUS: ACTIVE
 </div>
 </div>
 
-<audio id="beep" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
-
+<!-- ================= SCRIPT ================= -->
 <script>
 document.addEventListener("DOMContentLoaded",()=>{
 
-  const boot=document.getElementById("boot-screen");
-  const splash=document.getElementById("splash");
-  const loginEl=document.getElementById("login");
+  const boot = document.getElementById("boot-screen");
+  const splash = document.getElementById("splash");
+  const loginBox = document.getElementById("login");
+  const loginBtn = document.getElementById("loginBtn");
 
   setTimeout(()=>{
-    boot.style.transition="opacity 1s ease";
     boot.style.opacity="0";
+    boot.style.transition="opacity 1s ease";
   },2500);
 
   setTimeout(()=>{
@@ -215,19 +264,25 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   setTimeout(()=>{
     splash.style.display="none";
-    loginEl.style.display="block";
+    loginBox.style.display="block";
   },5200);
+
+  loginBtn.addEventListener("click",login);
 });
 
 function login(){
-  const u=user.value;
-  const p=pass.value;
-  if(u!=="pixelseee"||p!=="ENDURE"){
-    lockMsg.textContent="ACCESS DENIED";
+  const u = document.getElementById("user").value.trim();
+  const p = document.getElementById("pass").value.trim();
+  const msg = document.getElementById("lockMsg");
+
+  if(u !== "pixelseee" || p !== "ENDURE"){
+    msg.textContent = "ACCESS DENIED";
     return;
   }
-  login.style.display="none";
-  system.style.display="block";
+
+  document.getElementById("login").style.display="none";
+  document.getElementById("system").style.display="block";
+
   startDecrypt();
   fakeLogs();
 }
@@ -248,7 +303,13 @@ function show(id){
 }
 
 function fakeLogs(){
-  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…"];
+  const msgs=[
+    "Decrypting…",
+    "Masking traffic…",
+    "Generating noise…",
+    "Accessing shadow node…"
+  ];
+
   ["log1","log2","log3"].forEach(id=>{
     const el=document.getElementById(id);
     let i=0;
@@ -263,4 +324,3 @@ function fakeLogs(){
 
 </body>
 </html>
-
