@@ -283,9 +283,18 @@ function bootSequence() {
 bootSequence();
 
 function login() {
+  const username = document.getElementById("user").value;
+  const password = document.getElementById("pass").value;
+
+  if (username !== "pixelseee" || password !== "ENDURE") {
+    alert("ACCESS DENIED — INVALID CREDENTIALS");
+    return;
+  }
+
   document.getElementById("login").style.display = "none";
   document.getElementById("system").style.display = "block";
 }
+
 
 function show(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
