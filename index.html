@@ -80,22 +80,11 @@
 .spark{position:absolute;width:2px;height:100%;background:white;opacity:0.2;animation:sparkAnim 0.3s infinite}
 @keyframes sparkAnim{0%{opacity:0.1}50%{opacity:0.8}100%{opacity:0.1}}
 
-   <script>
-    // Remove boot screen after animation
-    setTimeout(() => {
-        const boot = document.getElementById("boot-screen");
-        boot.style.opacity = "0";
-        boot.style.transition = "opacity 1s ease";
-
-        setTimeout(() => {
-            boot.remove();
-        }, 1000);
-
-    }, 3000); // logo visible time
-</script>
+  
 
 </style>
 </head>
+
 <body>
 
   <div id="boot-screen">
