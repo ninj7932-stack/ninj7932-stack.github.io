@@ -4,10 +4,8 @@
 <meta charset="UTF-8">
 <title>OWL SECURE INTRANET</title>
 
- 
-
- 
-  * {
+<style>
+* {
   box-sizing: border-box;
 }
 
@@ -120,14 +118,29 @@ main {
 @keyframes blink {
   50% { opacity: 0; }
 }
+
+/* === DOSSIER IMAGE CSS === */
+.dossier-image {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pixandra {
+    width: 250px;
+    height: auto;
+    border: 2px solid white;
+    filter: grayscale(100%) contrast(120%);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.pixandra:hover {
+    transform: scale(1.05);
+    filter: grayscale(0%) contrast(140%);
+    cursor: pointer;
+}
 </style>
-
-
- 
 </head>
 
-
- 
 <body>
 
 <div id="boot"></div>
@@ -158,17 +171,16 @@ main {
     </nav>
 
     <main>
-
+      <!-- DOSSIER -->
       <div id="file" class="section active">
         <h2>SUBJECT DOSSIER</h2>
-        <p><b>Name:</b> Pixandra V. Elliot</p>    
-       
-     <div class="dossier-image">
-        <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" 
-             alt="Pixandra V. Elliot" 
-             class="pixandra">
+        <p><b>Name:</b> Pixandra V. Elliot</p>
 
-       
+        <!-- Picture -->
+        <div class="dossier-image">
+            <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" alt="Pixandra V. Elliot" class="pixandra">
+        </div>
+
         <p><b>Callsign:</b> PIXELSEEE</p>
         <p><b>Rank:</b> [O2] First Lieutenant</p>
         <p><b>Faction:</b> Order of the White Lotus</p>
@@ -176,6 +188,7 @@ main {
         <p><b>Notes:</b> Subject displays unusually high loyalty to the Order's doctrine.</p>
       </div>
 
+      <!-- LORE -->
       <div id="psych" class="section">
         <h2>LORE</h2>
         <div class="warning">
@@ -206,19 +219,19 @@ main {
         <p>Attachment triggers: <span class="redacted">Failing.</span></p>
       </div>
 
+      <!-- OPERATIONS -->
       <div id="ops" class="section">
         <h2>OPERATIONAL HISTORY</h2>
         <ul>
           <li>Bioweapon Acquisition Directive — UNRESOLVED</li>
-          <li>Masquerade Enforcement — SITE-416
-                                       OUTPOST SOLICE
-                                       FORT CONDOR</li>
+          <li>Masquerade Enforcement — SITE-416 / OUTPOST SOLICE / FORT CONDOR</li>
           <li>Conclave Surveillance — CONCLUDED, THE COCLAVE HAS OFFICIALLY BEEN DISBANDED</li>
           <li>THE "verrostetes eisen" INCIDENT — UNRESOLVED</li>
-            <li>CODENAME "Krune" Trial - UNRESOLVED</li>
+          <li>CODENAME "Krune" Trial - UNRESOLVED</li>
         </ul>
       </div>
 
+      <!-- WARNINGS -->
       <div id="warnings" class="section">
         <h2>INTERNAL WARNINGS</h2>
         <div class="warning">
@@ -229,6 +242,7 @@ main {
         </div>
       </div>
 
+      <!-- LOGS -->
       <div id="logs" class="section">
         <h2>SYSTEM LOG</h2>
         <pre>
@@ -286,4 +300,5 @@ function show(id) {
 
 </body>
 </html>
+
 
