@@ -1,225 +1,195 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
-</script>
-  
 <head>
 <meta charset="UTF-8">
 <title>OWL SECURE INTRANET</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:black;color:white;font-family:"Courier New",monospace;overflow:hidden}
+*{box-sizing:border-box}
+body{margin:0;background:black;color:white;font-family:"Courier New",monospace;overflow:hidden}
 
-  /* Full boot screen */
-#boot-screen {
-    position: fixed;
-    inset: 0;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+/* WINDOWS-STYLE BOOT SCREEN */
+#boot-screen{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
 }
 
-/* Logo */
-#boot-logo {
-    width: 220px;
-    opacity: 0;
-    transform: scale(0.85);
-    animation: logoBoot 2.5s ease-out forwards;
-    filter: drop-shadow(0 0 20px rgba(255,255,255,0.3));
+#boot-logo{
+  width:220px;
+  opacity:0;
+  transform:scale(0.85);
+  animation:logoBoot 2.5s ease-out forwards;
+  filter:drop-shadow(0 0 20px rgba(255,255,255,0.3));
 }
 
-/* Windows-style fade + scale */
-@keyframes logoBoot {
-    0% {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    40% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+@keyframes logoBoot{
+  0%{opacity:0;transform:scale(0.8)}
+  40%{opacity:1;transform:scale(1)}
+  100%{opacity:1;transform:scale(1)}
 }
 
-
-/* CRT SCANLINES & FLICKER */
+/* CRT EFFECTS */
 @keyframes crtFlicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,22%,24%,55%{opacity:0.7}}
 @keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(2px,-2px)}50%{transform:translate(-2px,2px)}75%{transform:translate(1px,-1px)}100%{transform:translate(0,0)}}
 
-/* BOOT */
-#boot{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;background:black;animation:crtFlicker 0.1s infinite,shake 2s infinite}
-#boot-logo{width:300px;opacity:0;filter:grayscale(100%) contrast(140%);transition:opacity 0.6s ease-in-out}
-#boot-text{color:#00ffcc;margin-top:20px;font-size:14px;white-space:pre-wrap}
-
 /* SPLASH */
-#splash{display:none;position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:16px}
+#splash{
+  display:none;
+  position:fixed;
+  inset:0;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  animation:crtFlicker 0.15s infinite;
+}
 
 /* LOGIN */
-#login{display:none;position:fixed;inset:0;padding:40px}input,button{background:black;color:white;border:1px solid white;padding:8px;width:300px;font-family:inherit}button{width:auto;cursor:pointer}button:hover{background:white;color:black}
+#login{
+  display:none;
+  position:fixed;
+  inset:0;
+  padding:40px;
+}
+input,button{
+  background:black;
+  color:white;
+  border:1px solid white;
+  padding:8px;
+  width:300px;
+  font-family:inherit;
+}
+button{cursor:pointer}
+button:hover{background:white;color:black}
 
 /* SYSTEM */
-#system{display:none;height:100vh;animation:crtFlicker 0.2s infinite}header{border-bottom:2px solid white;padding:15px}.container{display:flex;height:calc(100vh-70px)}nav{width:260px;border-right:2px solid white;padding:15px}nav button{width:100%;margin-bottom:10px}main{flex:1;padding:25px;overflow-y:auto}.section{display:none}.section.active{display:block}.redacted{background:white;color:white;padding:0 6px}.warning{border:1px solid white;padding:10px;margin-bottom:20px}.progress{width:100%;border:1px solid white;height:20px;margin-bottom:10px;position:relative}.progress-bar{height:100%;width:0%;background:white;transition:width 0.1s linear}.blink{animation:blink 1s steps(1) infinite}@keyframes blink{50%{opacity:0}}.pixandra{width:350px;border:2px solid white;filter:grayscale(100%) contrast(120%)}
+#system{display:none;height:100vh;animation:crtFlicker 0.2s infinite}
+header{border-bottom:2px solid white;padding:15px}
+.container{display:flex;height:calc(100vh - 70px)}
+nav{width:260px;border-right:2px solid white;padding:15px}
+nav button{width:100%;margin-bottom:10px}
+main{flex:1;padding:25px;overflow-y:auto}
+.section{display:none}
+.section.active{display:block}
 
-/* EXTRA HACKY EFFECTS */
-.glitch{position:relative;color:white;font-weight:bold;}
-.glitch:before,.glitch:after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden}
-.glitch:before{animation:glitchTop 2s infinite linear;clip-path:inset(0 0 50% 0)}
-.glitch:after{animation:glitchBot 3s infinite linear;clip-path:inset(50% 0 0 0)}
-@keyframes glitchTop{0%{transform:translate(2px,-2px)}20%{transform:translate(-2px,2px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-1px,1px)}80%{transform:translate(2px,0)}100%{transform:translate(0,0)}}
-@keyframes glitchBot{0%{transform:translate(-2px,2px)}20%{transform:translate(2px,-2px)}40%{transform:translate(-1px,1px)}60%{transform:translate(1px,-1px)}80%{transform:translate(-2px,0)}100%{transform:translate(0,0)}}
+.redacted{background:white;color:white;padding:0 6px}
+.progress{width:100%;border:1px solid white;height:20px;margin-bottom:10px}
+.progress-bar{height:100%;width:0%;background:white}
+.blink{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
 
-/* LOG SCROLL */
-.log-stream{height:150px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;font-size:12px;background:black}
-.log-stream pre{margin:0;white-space:pre-wrap}
+.pixandra{
+  width:350px;
+  border:2px solid white;
+  filter:grayscale(100%) contrast(120%);
+}
 
-/* HIDDEN DIRECTORIES */
-.hidden{color:#000;background:#000}
-
-/* EXTRA PROGRESS BAR FLAIR */
-.spark{position:absolute;width:2px;height:100%;background:white;opacity:0.2;animation:sparkAnim 0.3s infinite}
-@keyframes sparkAnim{0%{opacity:0.1}50%{opacity:0.8}100%{opacity:0.1}}
-
-  
-
+.log-stream{
+  height:150px;
+  overflow-y:auto;
+  border:1px solid white;
+  padding:5px;
+  margin-top:10px;
+  font-size:12px;
+}
+.hidden{color:black;background:black}
 </style>
 </head>
-  
-  <script>
-    // Remove boot screen after animation
-    setTimeout(() => {
-        const boot = document.getElementById("boot-screen");
-        boot.style.opacity = "0";
-        boot.style.transition = "opacity 1s ease";
-
-        setTimeout(() => {
-            boot.remove();
-        }, 1000);
-
-    }, 3000); // logo visible time
-</script>
 
 <body>
 
-  <div id="boot-screen">
-    <img src="OWL LOGO.jpeg" id="boot-logo" alt="OWL Logo">
-</div>
-
-<!-- BOOT -->
-<div id="boot">
-<img id="boot-logo" src="OWL LOGO.jpeg" alt="OWL Logo">
-<pre id="boot-text"></pre>
+<!-- WINDOWS BOOT -->
+<div id="boot-screen">
+  <img src="OWL LOGO.jpeg" id="boot-logo" alt="OWL Logo">
 </div>
 
 <!-- SPLASH -->
 <div id="splash">
-<img src="OWL LOGO.jpeg" alt="OWL Logo" style="width:300px;filter:grayscale(100%) contrast(140%)">
-<p>SECURE NODE ESTABLISHED</p>
+  <img src="OWL LOGO.jpeg" style="width:300px;filter:grayscale(100%) contrast(140%)">
+  <p>SECURE NODE ESTABLISHED</p>
 </div>
 
 <!-- LOGIN -->
 <div id="login">
-<h2>OWL INTERNAL AUTHENTICATION</h2>
-<p>User ID:</p><input id="user">
-<p>Clearance Key:</p><input id="pass" type="password"><br><br>
-<button onclick="login()">AUTHENTICATE</button>
-<p id="lockMsg"></p>
+  <h2>OWL INTERNAL AUTHENTICATION</h2>
+  <p>User ID:</p>
+  <input id="user">
+  <p>Clearance Key:</p>
+  <input id="pass" type="password"><br><br>
+  <button onclick="login()">AUTHENTICATE</button>
+  <p id="lockMsg"></p>
 </div>
 
 <!-- SYSTEM -->
 <div id="system">
-<header><b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>Clearance: O3+ VERIFIED | STATUS: ACTIVE</header>
+<header>
+<b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>
+Clearance: O3+ VERIFIED | STATUS: ACTIVE
+</header>
+
 <div class="container">
 <nav>
 <button onclick="show('file1')">DOSSIER: ELLIOT</button>
 <button onclick="show('file2')">DOSSIER: POLARIS</button>
-<button onclick="show('file3')">DOSSIER: OTHER ASSETS</button>
-<button onclick="show('ops')">SPECIAL OPERATIONS</button>
+<button onclick="show('file3')">OTHER ASSETS</button>
+<button onclick="show('ops')">SPECIAL OPS</button>
 <button onclick="show('dirs')">DIRECTORIES</button>
 <button onclick="show('logs')">SYSTEM LOG</button>
 </nav>
+
 <main>
-<!-- FILE 1 -->
+
 <div id="file1" class="section active">
-<h2>SUBJECT DOSSIER — PIXANDRA V. ELLIOT</h2>
+<h2>PIXANDRA V. ELLIOT</h2>
 <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra">
 <p><b>Rank:</b> O2</p>
 <p><b>Status:</b> ACTIVE</p>
-<p><b>Notes:</b> Loyalty index exceeds baseline.</p>
-<p><b>BACKGROUND SUMMARY</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc, Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
 <div class="log-stream" id="log1"></div>
 </div>
 
-<!-- FILE 2 -->
 <div id="file2" class="section">
-<h2>SUBJECT DOSSIER — POLARIS</h2>
-<p><b>Status:</b> <span class="redacted">CLASSIFIED</span></p>
-<p><b>Notes:</b> The Messenger. Handle with care.</p>
+<h2>POLARIS</h2>
+<p>Status: <span class="redacted">CLASSIFIED</span></p>
 <div class="log-stream" id="log2"></div>
 </div>
 
-<!-- FILE 3 -->
 <div id="file3" class="section">
-<h2>OTHER ASSETS</h2>
 <ul>
 <li>Agent A1 — <span class="redacted">CLASSIFIED</span></li>
 <li>Agent B2 — <span class="redacted">CLASSIFIED</span></li>
 <li>Agent C3 — <span class="redacted">CLASSIFIED</span></li>
-<li>Agent D4 — <span class="redacted">CLASSIFIED</span></li>
-<li>Agent E5 — <span class="redacted">CLASSIFIED</span></li>
 </ul>
 <div class="log-stream" id="log3"></div>
 </div>
 
-<!-- OPS -->
 <div id="ops" class="section">
-<h2>DECRYPTING OPERATIONAL FILES</h2>
-<div class="progress"><div class="progress-bar" id="bar1"></div><div class="spark"></div></div>
-<div class="progress"><div class="progress-bar" id="bar2"></div><div class="spark"></div></div>
-<div class="progress"><div class="progress-bar" id="bar3"></div><div class="spark"></div></div>
-<p>Decrypting ██████████▒▒▒▒▒▒▒▒</p>
-<div class="log-stream" id="logOps"></div>
+<h2>DECRYPTING FILES</h2>
+<div class="progress"><div class="progress-bar" id="bar1"></div></div>
+<div class="progress"><div class="progress-bar" id="bar2"></div></div>
+<div class="progress"><div class="progress-bar" id="bar3"></div></div>
 </div>
 
-<!-- DIRS -->
 <div id="dirs" class="section">
-<h2>ROOT DIRECTORY</h2>
 <ul>
-<li>/OWL/ (ACCESS GRANTED)</li>
+<li>/OWL/</li>
 <li>/FOUNDATION/ <span class="redacted">LOCKED</span></li>
-<li>/CONCLAVE/ <span class="redacted">PURGED</span></li>
-<li>/SECRET/ <span class="redacted">HIDDEN</span></li>
-<li>/OPS/ <span class="redacted">CLASSIFIED</span></li>
-<li>/DECOY/ <span class="redacted">???</span></li>
-<li>/TMP/ <span class="redacted">HIDDEN</span></li>
 <li class="hidden">/SYSTEM32/</li>
-<li class="hidden">/BOOT/</li>
-<li class="hidden">/MEM/</li>
 </ul>
 </div>
 
-<!-- LOGS -->
 <div id="logs" class="section">
-<pre id="syslog">
+<pre>
 [00:14] USER AUTHENTICATED
-[00:15] DECRYPTION IN PROGRESS
-[00:16] FOUNDATION DIRECTORY FLAGGED
-[00:17] OBSERVER IS SUBJECT
-[00:18] ATTEMPTING FAKE NETWORK CONNECT
-[00:19] ERROR: UNDEFINED PROTOCOL
-[00:20] PING: SUCCESS
-[00:21] SPURIOUS PACKETS DETECTED
-[00:22] MEMORY LEAK WARNING
-[00:23] INITIATING SCRAMBLE SEQUENCE
-[00:24] SYSTEM STABILIZED
-[00:25] FAKE LOG GENERATED
+[00:15] DECRYPTION ACTIVE
+[00:16] OBSERVER IS SUBJECT
 </pre>
 <span class="blink">█</span>
 </div>
+
 </main>
 </div>
 </div>
@@ -227,93 +197,69 @@
 <audio id="beep" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
 
 <script>
-/* BOOT + GLITCH NOISE */
-const bootText=`OWL SECURE NODE v3.17
-Initializing encrypted uplink...
-Loading doctrine modules...
-WARNING: UNAUTHORIZED ACCESS WILL BE MET WITH DEADLY FORCE`;
+document.addEventListener("DOMContentLoaded",()=>{
 
-const bootEl=document.getElementById("boot-text");
-const bootLogo=document.getElementById("boot-logo");
-const beep=document.getElementById("beep");
+  const boot=document.getElementById("boot-screen");
+  const splash=document.getElementById("splash");
+  const loginEl=document.getElementById("login");
 
-function bootAnim(line=0,char=0){
-  const lines=bootText.split("\n");
-  if(line>=lines.length){
-    setTimeout(()=>{
-      bootLogo.style.opacity=1;
-      document.getElementById("boot").style.display="none";
-      document.getElementById("splash").style.display="flex";
-      setTimeout(()=>{
-        document.getElementById("splash").style.display="none";
-        document.getElementById("login").style.display="block";
-        startFakeLogs();
-      },2000);
-    },1000);
-    return;
-  }
-  const textLine=lines[line];
-  bootEl.textContent+=textLine.charAt(char);
-  if(textLine.charAt(char)!==" ") beep.play();
-  char++;
-  if(char<textLine.length) setTimeout(()=>bootAnim(line,char),25);
-  else{
-    bootLogo.style.opacity=0.3+Math.random()*0.7;
-    setTimeout(()=>bootAnim(line+1,0),500);
-  }
-}
+  setTimeout(()=>{
+    boot.style.transition="opacity 1s ease";
+    boot.style.opacity="0";
+  },2500);
 
-/* LOGIN */
+  setTimeout(()=>{
+    boot.remove();
+    splash.style.display="flex";
+  },3600);
+
+  setTimeout(()=>{
+    splash.style.display="none";
+    loginEl.style.display="block";
+  },5200);
+});
+
 function login(){
-  const u=document.getElementById("user").value;
-  const p=document.getElementById("pass").value;
+  const u=user.value;
+  const p=pass.value;
   if(u!=="pixelseee"||p!=="ENDURE"){
-    document.getElementById("lockMsg").textContent="ACCESS DENIED";
+    lockMsg.textContent="ACCESS DENIED";
     return;
   }
-  document.getElementById("login").style.display="none";
-  document.getElementById("system").style.display="block";
+  login.style.display="none";
+  system.style.display="block";
   startDecrypt();
-  startFakeLogs();
+  fakeLogs();
 }
 
-/* DECRYPT CHAOS */
 function startDecrypt(){
-  let bars=[document.getElementById("bar1"),document.getElementById("bar2"),document.getElementById("bar3")];
-  bars.forEach((bar,i)=>{
-    let w=0,dir=1;
-    let interval=setInterval(()=>{
-      w+=Math.random()*5*dir;
-      if(w>=100)dir=-1;
-      if(w<=0)dir=1;
-      bar.style.width=w+"%";
-    },100+i*50);
+  ["bar1","bar2","bar3"].forEach(id=>{
+    let w=0;
+    setInterval(()=>{
+      w=(w+Math.random()*6)%100;
+      document.getElementById(id).style.width=w+"%";
+    },120);
   });
 }
- 
 
-/* NAV */
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-/* FAKE LOG GENERATOR */
-function startFakeLogs(){
-  const logs=["Initializing firewall override...","Decrypting hidden nodes...","Loading hidden agents...","Memory allocation: OK","Probe signal: ACTIVE","Fake data stream generated","Scanning network ports","Obfuscation layer: ON","Telemetry report: REDACTED","Compiling fake operation logs"];
-  ["log1","log2","log3","logOps"].forEach(id=>{
+function fakeLogs(){
+  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…"];
+  ["log1","log2","log3"].forEach(id=>{
     const el=document.getElementById(id);
-    let count=0;
+    let i=0;
     setInterval(()=>{
-      if(count>=logs.length) count=0;
-      el.textContent+=logs[count]+"\n";
+      el.textContent+=msgs[i%msgs.length]+"\n";
       el.scrollTop=el.scrollHeight;
-      count++;
-    },300+Math.random()*300);
+      i++;
+    },400);
   });
 }
-
-bootAnim();
 </script>
+
 </body>
 </html>
