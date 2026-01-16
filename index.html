@@ -134,13 +134,20 @@ main {
     cursor: pointer;
 }
 </style>
+ 
 </head>
 
 <body>
 
 <div id="boot"></div>
+<div id="splash" style="display:none; position:fixed; inset:0; background:black; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+  <img src="OWL LOGO.jpeg" alt="OWL Logo" style="width:300px; filter:grayscale(100%) contrast(140%);">
+  <br><br>
+  <button onclick="enterTerminal()">ACCESS TERMINAL</button>
+</div>
 
-<div id="login">
+<div id="login" style="display:none;">
+
   <h2>OWL INTERNAL AUTHENTICATION</h2>
   <p>User ID:</p>
   <input id="user" placeholder="pixelseee">
@@ -255,6 +262,7 @@ main {
 </div>
 
 <script>
+<script>
 const bootText = `
 OWL SECURE NODE v3.17
 Initializing encrypted uplink...
@@ -266,6 +274,8 @@ WARNING: UNAUTHORIZED ACCESS WILL BE MET WITH DEADLY FORCE
 
 let i = 0;
 const boot = document.getElementById("boot");
+const splash = document.getElementById("splash");
+const loginScreen = document.getElementById("login");
 
 function bootSequence() {
   if (i < bootText.length) {
@@ -275,13 +285,20 @@ function bootSequence() {
   } else {
     setTimeout(() => {
       boot.style.display = "none";
-      document.getElementById("login").style.display = "block";
-    }, 500);
+      splash.style.display = "flex";
+    }, 800);
   }
 }
 
 bootSequence();
 
+/* === SPLASH BUTTON === */
+function enterTerminal() {
+  splash.style.display = "none";
+  loginScreen.style.display = "block";
+}
+
+/* === LOGIN LOCK === */
 function login() {
   const username = document.getElementById("user").value;
   const password = document.getElementById("pass").value;
@@ -291,15 +308,17 @@ function login() {
     return;
   }
 
-  document.getElementById("login").style.display = "none";
+  loginScreen.style.display = "none";
   document.getElementById("system").style.display = "block";
 }
 
-
+/* === NAVIGATION === */
 function show(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
+</script>
+
 </script>
 
 </body>
