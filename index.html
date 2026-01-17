@@ -249,48 +249,53 @@ A vulnerability was spotted and without the proper guidance and teachings for de
 </div>
 
 <script>
+window.onload = function () {
+  const bootScreen = document.getElementById("boot-screen");
+  const loginScreen = document.getElementById("login");
 
-window.onload = function(){
-  const boot = document.getElementById("boot-screen");
-  const logo = document.getElementById("boot-logo");
-
-  setTimeout(()=>{
-    logo.style.transition = "opacity 1s ease";
-    boot.style.transition = "opacity 1s ease";
-    logo.style.opacity = "0";
-    boot.style.opacity = "0";
+  // allow logo + text to finish fading in
+  setTimeout(() => {
+    bootScreen.style.transition = "opacity 1s ease";
+    bootScreen.style.opacity = "0";
   }, 2000);
 
-  setTimeout(()=>{
-    boot.style.display = "none";
-    document.getElementById("login").style.display = "flex";
+  // remove boot screen + show login
+  setTimeout(() => {
+    bootScreen.style.display = "none";
+    loginScreen.style.display = "flex";
   }, 3000);
-}
-
-
+};
 
 function show(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
 function login(){
-  if(user.value==="OWL" && pass.value==="ENDURE"){
-    login.style.display="none";
-    system.style.display="block";
+  const userField = document.getElementById("user");
+  const passField = document.getElementById("pass");
+  const lockMsg = document.getElementById("lockMsg");
+
+  if(userField.value === "OWL" && passField.value === "ENDURE"){
+    document.getElementById("login").style.display = "none";
+    document.getElementById("system").style.display = "block";
     startTimer();
-  } else lockMsg.textContent="ACCESS DENIED";
+  } else {
+    lockMsg.textContent = "ACCESS DENIED";
+  }
 }
 
 function startTimer(){
-  let s=0,m=0;
-  setInterval(()=>{
-    if(++s>59){s=0;m++;}
-    sessionTimer.textContent=
-      `${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
-  },1000);
+  let s = 0, m = 0;
+  setInterval(() => {
+    s++;
+    if (s > 59) { s = 0; m++; }
+    document.getElementById("sessionTimer").textContent =
+      `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  }, 1000);
 }
 </script>
+
 
 </body>
 </html>
