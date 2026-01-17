@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>OWL SECURE INTRANET</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:black;color:white;font-family:"Courier New",monospace;overflow:hidden;}
 
-/* TV STATIC */
 #static{
   position:fixed; inset:0;
   pointer-events:none;
@@ -23,7 +23,6 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
 }
 @keyframes staticAnim{0%{background-position:0 0;}100%{background-position:0 2px;}}
 
-/* BOOT LOGO */
 #boot-screen{
   position:fixed; inset:0;
   display:flex; flex-direction:column;
@@ -36,165 +35,248 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
   animation:logoFade 2s ease forwards;
 }
 #boot-msg{
-  margin-top:20px; color:white; font-size:14px;
+  margin-top:20px; font-size:14px;
   opacity:0; animation:msgFade 3s ease forwards;
 }
-@keyframes logoFade{0%{opacity:0; transform:scale(0.8);}50%{opacity:1; transform:scale(1);}100%{opacity:1; transform:scale(1);}}
-@keyframes msgFade{0%{opacity:0;}50%{opacity:0.5;}100%{opacity:1;}}
+@keyframes logoFade{to{opacity:1; transform:scale(1);}}
+@keyframes msgFade{to{opacity:1;}}
 
-/* LOGIN SCREEN */
 #login{
   position:fixed; inset:0;
-  display:none; /* initially hidden until boot animation finishes */
-  flex-direction:column; justify-content:center; align-items:center;
-  background:black; padding:40px;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:black;
   z-index:9997;
 }
-input,button{background:black;color:white;border:1px solid white;padding:8px;width:300px;font-family:inherit;}
+input,button{
+  background:black;
+  color:white;
+  border:1px solid white;
+  padding:8px;
+  width:300px;
+  font-family:inherit;
+}
 button{cursor:pointer;margin-top:10px;}
 button:hover{background:white;color:black;}
 
-/* SYSTEM UI */
-#system{display:none;height:100vh;position:relative;z-index:0;}
+#system{display:none;height:100vh;}
 header{border-bottom:2px solid white;padding:15px;}
 .container{display:flex;height:calc(100vh - 70px);}
 nav{width:260px;border-right:2px solid white;padding:15px;}
-nav button{width:100%;margin-bottom:10px;cursor:pointer;}
-nav button:hover{background:white;color:black;}
-main{flex:1;padding:25px;overflow-y:auto;position:relative;}
+nav button{width:100%;margin-bottom:10px;}
+main{flex:1;padding:25px;overflow-y:auto;}
+
 .section{display:none;}
 .section.active{display:block;}
-.redacted{background:white;color:white;padding:0 6px;}
-.progress{width:100%;border:1px solid white;height:20px;margin-bottom:10px;position:relative;overflow:hidden;}
-.progress-bar{height:100%;width:0%;background:white;transition:width 0.1s linear;}
-.blink{animation:blink 1s steps(1) infinite;}
-@keyframes blink{50%{opacity:0}}
-.pixandra{width:350px;border:2px solid white;filter:grayscale(100%) contrast(120%);}
-.log-stream{height:150px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;font-size:12px;background:black;}
-.fake-notice{border:1px solid white;padding:5px;margin:5px 0;font-size:12px;}
-.fake-alert{color:red;font-weight:bold;}
-.fake-terminal-output{height:100px;overflow-y:auto;border:1px solid white;padding:5px;margin:5px 0;font-size:12px;background:black;}
-.fake-terminal-command{width:100%;background:black;color:white;border:1px solid white;padding:8px;margin-top:10px;font-family:"Courier New",monospace;}
-.fake-cursor{display:inline-block;width:10px;background:white;margin-left:2px;animation:blinkCursor 1s steps(1) infinite;}
-@keyframes blinkCursor{50%{opacity:0;}100%{opacity:1;}}
+
+.pixandra{width:350px;border:2px solid white;}
+
+.log-stream,
+.fake-terminal-output{
+  border:1px solid white;
+  padding:5px;
+  font-size:12px;
+  background:black;
+  margin-top:10px;
+}
 </style>
 </head>
+
 <body>
 
 <div id="static"></div>
 
-<!-- BOOT SCREEN -->
 <div id="boot-screen">
-  <img src="OWL LOGO.jpeg" id="boot-logo" alt="OWL Logo">
+  <img src="OWL LOGO.jpeg" id="boot-logo">
   <div id="boot-msg">Initializing OWL Secure Node...</div>
 </div>
 
-<!-- LOGIN SCREEN -->
 <div id="login">
   <h2>OWL INTERNAL AUTHENTICATION</h2>
-  <p>User ID:</p><input id="user">
-  <p>Clearance Key:</p><input id="pass" type="password"><br>
+  <input id="user" placeholder="User ID">
+  <input id="pass" type="password" placeholder="Clearance Key">
   <button onclick="login()">LOGIN</button>
   <p id="lockMsg"></p>
 </div>
 
-<!-- SYSTEM -->
 <div id="system">
 <header>
-  <b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>
-  Clearance: O3+ VERIFIED | STATUS: ACTIVE
-  <span id="sessionTimer" style="float:right;font-size:12px;">00:00</span>
+  ORDER OF THE WHITE LOTUS — INTERNAL NETWORK
+  <span id="sessionTimer" style="float:right;">00:00</span>
 </header>
 
 <div class="container">
 <nav>
-<button onclick="show('file2')">DOSSIER: [REDACTED]</button>
-  <button onclick="show('file3')">[REDACTED]</button>
-  <button onclick="show('file1')">DOSSIER: ELLIOT</button>
-  <button onclick="show('file4')">[REDACTED]</button>
-  <button onclick="show('file5')">[REDACTED]</button>
+  <button onclick="show('file1')">OC: ELLIOT</button>
+  <button onclick="show('file2')">OC: KRUNE SOLI</button>
+  <button onclick="show('file3')">OC: WARREN GRANT CANNER</button>
+  <button onclick="show('file4')">OC: IOLANA KELLING</button>
+  <button onclick="show('file5')">OC: GABRIEL GERHMAN</button>
   <button onclick="show('file6')">[REDACTED]</button>
   <button onclick="show('file7')">[REDACTED]</button>
   <button onclick="show('file8')">[REDACTED]</button>
-  <button onclick="show('file9')">MORPH CONFG.</button>
+  <button onclick="show('file9')">MORPH CONFIG</button>
 </nav>
 
 <main>
+
 <div id="file1" class="section active">
-<h2>PIXANDRA V. ELLIOT</h2>
-<img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra" alt="Pixandra">
-<p><b>Rank:</b> O2</p>
-<p><b>Status:</b> ACTIVE</p>
-<p><b>LORE:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
-<div class="log-stream" id="log1"></div>
-<input id="terminalInput" placeholder="Enter command here" class="fake-terminal-command">
-<div class="fake-notice">NOTICE: All activity logged</div>
-<div class="fake-alert">ALERT: Unusual login pattern detected</div>
-<div class="fake-terminal-output" id="fakeOutput1"></div>
-</main>
-
-<main>
-
-  <div id="file9" class="section active">
-<h2>[----------------REDACTED----------------]</h2>
-<p>[REDACTED]
-  [REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED]
-  [REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED][REDACTED]</p>
-<div class="log-stream" id="log2"></div>
-<input id="terminalInput2" placeholder="Enter command here">
-<div class="fake-notice">NOTICE: Encryption active</div>
-<div class="fake-terminal-output" id="fakeOutput2"></div>
+  <h2>PIXANDRA V. ELLIOT</h2>
+  <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra">
+  <p><b>Rank:</b> O2 First Lieutenat</p>
+  <p><b>Status:</b> ACTIVE</p>
+  <p><b>LORE:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
 </div>
-    
-</main>
+
+<div id="file2" class="section">
+  <h2>DOSSIER: KRUNE SOLI</h2>
+
+  <p><b>Rank:</b> O4 Major</p>
+  <p><b>Status:</b> ACTIVE</p>
+  <p><b>Lore:</b> Krune Soli was born in Kherson, Ukraine, in 19██. His childhood was not one of wealth, but it was a childhood full of memories, like the scent of motor oil on his father’s clothes when he returned from the shipyard, or the stacks of old books in his mother’s classroom that she often brought home, or even the long evenings when the family would sit together on the balcony, watching the slow flow of the Dnipro River.
+
+Their apartment was small, with peeling wallpaper and a leaky radiator, but it was filled with warmth and charm. His father would tell him, “We don’t have much, but we keep what we do have alive.” That sense of responsibility, of holding onto the fragile things, stuck with Krune.
+
+As the eldest of three children, Krune naturally became protective. He usually walked his younger siblings, Danylo and Mira, to school.. Teachers noticed his tendency to take the blame when Mira caused trouble. This was his first taste of sacrifice: giving pieces of himself to shield others.
+
+Despite their poverty, Oksana, his mother, gave her children a world much larger than Kherson’s crumbling industrial sector. She loved folklore, particularly the old agrarian gods of pre-Christian Slavic mythology. While other children were told fairy tales, Krune grew up hearing stories of horned monsters, pasture spirits, and gods who walked with hooves through the fields. She told them not with fear, but reverence - myth as memory, not superstition.
+
+Krune was fascinated by these stories but never superstitious. To him, the stories were just fragments of so called "history". Curiosities that connected them to their land and ancestors. Little did he know they would soon become the foundation of his transformation. 
+One night, he awoke to the smell of smoke and the sound of low chanting drifting up from the stairwell. Confused, he woke up Danylo, thinking maybe the neighbours were drunk again. But when he opened the door, he saw figures descending into the basement. They were masked, cloaked and they were carrying bowls of ash.
+
+Moments later, fire erupted in the lower floors. Whether by accident or design, the building went up in flames.
+
+Krune tried desperately to drag his siblings out, but a falling beam separated him from them. His father screamed for him to go, his mother clutching Mira and Danylo in the thick smoke. Andriy’s last command to him was not a plea for help, but a shout: “Run, Krune!”
+
+He escaped by forcing open a window onto the fire escape. When he turned back, the flames had consumed everything.
+
+The official record called it a gas leak explosion. The papers reported a tragedy. But Krune, coughing soot, eyes burning, remembered what he had seen: the masks, the horns, the chanting. And from that day, grief hardened into obsession.
+
+For months after the fire, Krune lived in a kind of half-existence. He drifted between shelters, got into fights with older teens, and stole food. He had no family, no future, and no one who would believe his story.
+
+It was during this time that he was noticed. A Global Occult Coalition recruiter, working through one of their European informant networks, learned of the boy who insisted a masked cult had killed his family. Instead of dismissing him, they conducted an investigation. What they found disturbed them: the Soli home was, in fact, the site of a ritual.
+Krune was given a choice: disappear into an orphanage, or put his rage and his sharp memory to use. He chose the latter.
+
+At sixteen, he was introduced into GOC’s periphery, not as an agent, but as an asset. His ability to recall faces, locations, and ritual details made him a valuable asset. Over time, as he grew older and became stronger, the GOC formalized his training. He became skilled at surveillance, field analysis, and cult infiltration. His strength wasn’t brute force, but patience and adaptability. </p>
+</div>
+
+<div id="file3" class="section">
+  <h2>WARREN GRANT CANNER</h2>
+  
+  <p><b>Rank:</b> O5 Lieutenant Colonel</p>
+  <p><b>Status:</b> ACTIVE</p>
+  <p><b>LORE:</b>Warren Grant Canner, an English-born Russian technician, had been given many opportunities in their lifetime. 
+In his early years, ambitions came first when greed was understood. The world felt so small. To him, it could be more grand. It could be more.
+However, too much, too soon. They hardly understood what came next for him to learn. Mathematics, restrictions, “if and then”s, they all clouded their mind.
+His own family was stable enough to be caring and loving.
+But there has to be more. A key.
+Just barely finishing their own personal education with a passing grade, Canner sought for a more brutal side of the world. His philosophy: the cruel must have an answer for all. 
+But he needed money. In 2010, this new adult could be spotted working for a local bank. And just two years after that, he sailed to Russia.
+Tying multiple strings, making false but feasible statements, he had convinced a secluded portion of the Russian Bravta… which was all a delusion to keep himself from worrying about the insurmountable amount of debt.
+Obtaining a false doctorate from his “connections”, Canner went to find someone or something else. It didn’t matter whether it was alive or not, just anything that showed defiance to the natural forces was enough for his interest.
+Then, north of Usinsk, Russia, something extraordinary occurred. 
+With a new pair of eyes, he had to understand more. 
+How can this nothing be something? It was only a few tamperings with the volts, nothing more. And now…
+No matter. If it can occur once, it can be harnessed. It can be harnessed.
+
+But then, for whatever unknown reason, he’s here. Face-to-face with a coalition of multiple nationalities, all seeking answers.
+
+Maybe…
+Possibly…
+They want mine.
+</p>
+  <p></p>
+  
+</div>
+
+<div id="file4" class="section">
+  <h2>IOLANA KELLING</h2>
+
+   <p><b>Rank:</b> O5 Lieutenant Colonel</p>
+  <p><b>Status:</b> KIA</p>
+  <p><b>LORE:</b>Iolana Kelling was born in the State of Hawaiʻi on July, 7 19XX. They had a fairly normal childhood and grew up with one sister, Iolana was a good student throughout their school days. After graduating high school they would soon after go to college to pursue a major in Psychology and a minor in English.
+After they graduated college Iolana was then reached out to by the SCP Foundation to join their Administration Department. It took some time for Iolana to get used to the conditions of the facility but they would make it work, in time they got used to how the site operated with the SCPs stationed there. Iolana was loyal to the foundation however time and time again they would see or hear about the unjust treatment of SCPs and Class D’s but it was for the betterment of humanity..right? 
+Iolana got more upset at the foundation each time they saw or heard a incident of the unethical treatment of the SCPs and the Class D’s and that loyalty was slowly but surely slipping until it all boiled over. One day Iolana was looking at past researching tests until they found recordings of the inhumane and unethical tests and procedures of some of the humanoid SCPs, they were furious when they saw what the Foundation was doing to these SCPs. 
+Iolana then left the SCP Foundation and resented all that they stood for, all those years, all that time..wasted on such inhumane acts. They weren’t spotted until a few weeks later coming back with an armed group that called themselves the “Order of the White Lotus.” They burned the site to the ground.
+
+    === TERMINATED ===
+
+  </p>
+  <p></p>
+</div>
+
+<div id="file5" class="section">
+  <h2>GABRIEL GERHMAN</h2>
+
+  <p><b>Rank:</b> O6 THE DIRECTOR</p>
+  <p><b>Status:</b> ACTIVE</p>
+  <p><b>LORE:</b> Coming from a specialized strike team in the United Nations Global Occult Coalition, Gabriel Gehrman was a medic in his squad. During his time in the GOC, he witnessed various encounters with cults and sarkic anomalies that were products of rituals. Despite the strike team's best efforts, the cult activity never ceased in their designated region. Even with the right leads to their main compounds, they couldn't be raided without the permission of high command. This and other issues with the bureaucracy of the GOC made him lose faith in the mission of protecting humanity from the anomalous.
+After expressing his concerns to his team leader, Gehrman presented the GOC with a retirement request, which was approved after 10 business days of delay. With no more restraints, he came back to his hometown in London, where he would take a break and reflect on the people at the top who ran the operations.
+
+He was eventually found by a field agent of The New Order. And after a while of convincing, the agent invited him to join their cause and do things right with new directives that were different than the bureaucracy he was used to dealing with. A new path had been opened for him that restored his faith in the fight against the anomalous. That invitation was something that couldn't be rejected.
+Gabriel was introduced to the ways of The New Order, and soon enough was rising through the ranks faster than his recruiter expected due to his experience in the GOC. He met more veterans like him who left for the same reason. Some of them were part of other organizations like the SCP Foundation or The Horizon Initiative. Now together to work for the same goal.
  
-   
- </div>
+After the reforms that lead to the transition to the Order of the White Lotus, Gabriel was already part of the Board of Directors, being part of the very few who could resist the influence of him a bargain could be struck and harmony was restored to the ranks of the White Lotus.
+A vulnerability was spotted and without the proper guidance and teachings for defense against memetic influences, the Order was doomed to fall into madness. This is why Gabriel volunteered to become the first Chaplain of the Order. A role whose duty is to maintain the purity and mental well-being of the ranks by keeping the traditions and ideals while still supporting them on the field.
+  </p>
+  <p></p>
+</div>
+
+<div id="file6" class="section">
+  <h2>[REDACTED]</h2>
+  <p>PASTE CONTENT HERE</p>
+</div>
+
+<div id="file7" class="section">
+  <h2>[REDACTED]</h2>
+  <p>PASTE CONTENT HERE</p>
+</div>
+
+<div id="file8" class="section">
+  <h2>[REDACTED]</h2>
+  <p>PASTE CONTENT HERE</p>
+</div>
+
+<div id="file9" class="section">
+  <h2>[REDACTED]</h2>
+  <p>PASTE MORPH CONFIGURATION DATA HERE</p>
+</div>
+
+</main>
+</div>
+</div>
 
 <script>
-// Boot animation ends, show login
-window.onload = function(){
-  setTimeout(()=>{
-    document.getElementById("boot-screen").style.display="none";
-    document.getElementById("login").style.display="flex";
-  },2500); // 2.5s
-}
+window.onload=()=>setTimeout(()=>{
+  boot-screen.style.display="none";
+  login.style.display="flex";
+},2500);
 
-// Show sections
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-// Login function
 function login(){
-  const u = document.getElementById("user").value.trim();
-  const p = document.getElementById("pass").value.trim();
-  const msg = document.getElementById("lockMsg");
-
-  if(u === "OWL" && p === "ENDURE"){
-    document.getElementById("login").style.display="none";
-    document.getElementById("system").style.display="block";
-
-    startFakeLogs();
-    startSessionTimer();
-  } else {
-    msg.textContent="ACCESS DENIED";
-  }
+  if(user.value==="OWL" && pass.value==="ENDURE"){
+    login.style.display="none";
+    system.style.display="block";
+    startTimer();
+  } else lockMsg.textContent="ACCESS DENIED";
 }
 
-// Fake log stream
-function startFakeLogs(){
-  const msgs = ["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…","Node sync active","Firewall bypass"];
-  ["log1","fakeOutput1"].forEach(id=>{
-    const el=document.getElementById(id); if(!el) return;
-    let i=0; setInterval(()=>{el.textContent+=msgs[i%msgs.length]+"\n";el.scrollTop=el.scrollHeight;i++;},400);
-  });
+function startTimer(){
+  let s=0,m=0;
+  setInterval(()=>{
+    if(++s>59){s=0;m++;}
+    sessionTimer.textContent=
+      `${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
+  },1000);
 }
-
-// Session timer
-function startSessionTimer(){let sec=0; let min=0; setInterval(()=>{sec++; if(sec>59){sec=0; min++;}document.getElementById("sessionTimer").textContent=(min<10?"0":"")+min+":"+(sec<10?"0":"")+sec;},1000);}
 </script>
 
 </body>
 </html>
+
