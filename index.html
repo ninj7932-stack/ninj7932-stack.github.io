@@ -249,10 +249,25 @@ A vulnerability was spotted and without the proper guidance and teachings for de
 </div>
 
 <script>
-window.onload=()=>setTimeout(()=>{
-  boot-screen.style.display="none";
-  login.style.display="flex";
-},2500);
+
+window.onload = function(){
+  const boot = document.getElementById("boot-screen");
+  const logo = document.getElementById("boot-logo");
+
+  setTimeout(()=>{
+    logo.style.transition = "opacity 1s ease";
+    boot.style.transition = "opacity 1s ease";
+    logo.style.opacity = "0";
+    boot.style.opacity = "0";
+  }, 2000);
+
+  setTimeout(()=>{
+    boot.style.display = "none";
+    document.getElementById("login").style.display = "flex";
+  }, 3000);
+}
+
+
 
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
