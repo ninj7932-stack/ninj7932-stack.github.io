@@ -240,8 +240,20 @@ A vulnerability was spotted and without the proper guidance and teachings for de
 </div>
 
 <div id="file9" class="section">
-  <h2>[REDACTED]</h2>
-  <p>PASTE MORPH CONFIGURATION DATA HERE</p>
+  <h2>MORPH CONFIGURATION TERMINAL</h2>
+
+  <div class="fake-terminal-output" id="fakeOutput1">
+    OWL SECURE NODE v3.7
+    TYPE "help" FOR COMMAND LIST
+  </div>
+
+  <input
+    id="terminalInput"
+    placeholder="> enter command"
+    autocomplete="off"
+    spellcheck="false"
+    style="margin-top:10px;width:100%;"
+  >
 </div>
 
 </main>
@@ -301,7 +313,14 @@ function startTimer(){
 </script>
 
   <script>
-const terminal = document.getElementById("terminalInput");
+let terminal;
+let output;
+
+document.addEventListener("DOMContentLoaded", () => {
+  terminal = document.getElementById("terminalInput");
+  output = document.getElementById("fakeOutput1");
+});
+
 const output = document.getElementById("fakeOutput1");
 
 if (terminal) {
