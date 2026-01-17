@@ -276,7 +276,10 @@ function login(){
   const passField = document.getElementById("pass");
   const lockMsg = document.getElementById("lockMsg");
 
-  if(userField.value === "OWL" && passField.value === "ENDURE"){
+  const user = userField.value.trim().toUpperCase();
+  const pass = passField.value.trim().toUpperCase();
+
+  if(user === "OWL" && pass === "ENDURE"){
     document.getElementById("login").style.display = "none";
     document.getElementById("system").style.display = "block";
     startTimer();
@@ -284,6 +287,7 @@ function login(){
     lockMsg.textContent = "ACCESS DENIED";
   }
 }
+
 
 function startTimer(){
   let s = 0, m = 0;
