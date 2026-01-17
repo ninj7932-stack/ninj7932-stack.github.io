@@ -299,6 +299,85 @@ function startTimer(){
   }, 1000);
 }
 </script>
+<script>
+const terminal = document.getElementById("terminalInput");
+const output = document.getElementById("fakeOutput1");
+
+if (terminal) {
+  terminal.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const cmd = terminal.value.trim();
+      terminal.value = "";
+
+      if (cmd === "") return;
+
+      output.textContent += "> " + cmd + "\n";
+      runFakeCommand(cmd);
+      output.scrollTop = output.scrollHeight;
+    }
+  });
+}
+
+function runFakeCommand(cmd) {
+  const c = cmd.toLowerCase();
+
+  if (c === "help") {
+    output.textContent +=
+`AVAILABLE COMMANDS:
+ help
+ status
+ whoami
+ scan
+ clear
+ logout\n`;
+  }
+
+  else if (c === "status") {
+    output.textContent +=
+`NODE STATUS: ONLINE
+ENCRYPTION: ACTIVE
+MASKING: ENABLED
+TRACE LEVEL: 0.03%\n`;
+  }
+
+  else if (c === "whoami") {
+    output.textContent +=
+`USER: OWL_INTERNAL
+CLEARANCE: O3+
+SESSION: VERIFIED\n`;
+  }
+
+  else if (c === "scan") {
+    output.textContent += "Scanning network";
+    let dots = 0;
+    const scan = setInterval(() => {
+      output.textContent += ".";
+      dots++;
+      if (dots > 3) {
+        clearInterval(scan);
+        output.textContent += "\nNO THREATS DETECTED\n";
+        output.scrollTop = output.scrollHeight;
+      }
+    }, 400);
+  }
+
+  else if (c === "clear") {
+    output.textContent = "";
+  }
+
+  else if (c === "logout") {
+    location.reload();
+  }
+
+  else {
+    output.textContent +=
+`ERROR: COMMAND NOT RECOGNIZED
+TYPE 'help' FOR LIST\n`;
+  }
+}
+</script>
 
 
 </body>
