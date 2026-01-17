@@ -29,7 +29,6 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
   display:flex; flex-direction:column;
   justify-content:center; align-items:center;
   background:black; z-index:9999;
-  opacity:1; transition: opacity 1s ease;
 }
 #boot-logo{
   width:220px; opacity:0;
@@ -46,11 +45,10 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
 /* LOGIN SCREEN */
 #login{
   position:fixed; inset:0;
-  display:none;
+  display:none; /* initially hidden until boot animation finishes */
   flex-direction:column; justify-content:center; align-items:center;
   background:black; padding:40px;
   z-index:9997;
-  opacity:0; transition: opacity 1s ease;
 }
 input,button{background:black;color:white;border:1px solid white;padding:8px;width:300px;font-family:inherit;}
 button{cursor:pointer;margin-top:10px;}
@@ -67,15 +65,18 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 .section{display:none;}
 .section.active{display:block;}
 .redacted{background:white;color:white;padding:0 6px;}
+.progress{width:100%;border:1px solid white;height:20px;margin-bottom:10px;position:relative;overflow:hidden;}
+.progress-bar{height:100%;width:0%;background:white;transition:width 0.1s linear;}
+.blink{animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0}}
+.pixandra{width:350px;border:2px solid white;filter:grayscale(100%) contrast(120%);}
 .log-stream{height:150px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;font-size:12px;background:black;}
-
-  .pixandra{
-  width:350px;
-  border:2px solid white;
-  filter:grayscale(100%) contrast(120%);
-  margin-bottom:15px;
-}
-
+.fake-notice{border:1px solid white;padding:5px;margin:5px 0;font-size:12px;}
+.fake-alert{color:red;font-weight:bold;}
+.fake-terminal-output{height:100px;overflow-y:auto;border:1px solid white;padding:5px;margin:5px 0;font-size:12px;background:black;}
+.fake-terminal-command{width:100%;background:black;color:white;border:1px solid white;padding:8px;margin-top:10px;font-family:"Courier New",monospace;}
+.fake-cursor{display:inline-block;width:10px;background:white;margin-left:2px;animation:blinkCursor 1s steps(1) infinite;}
+@keyframes blinkCursor{50%{opacity:0;}100%{opacity:1;}}
 </style>
 </head>
 <body>
@@ -94,6 +95,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
   <p>User ID:</p><input id="user">
   <p>Clearance Key:</p><input id="pass" type="password"><br>
   <button onclick="login()">LOGIN</button>
+  <p id="lockMsg"></p>
 </div>
 
 <!-- SYSTEM -->
@@ -106,7 +108,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 
 <div class="container">
 <nav>
-  <button onclick="show('file2')">DOSSIER: [REDACTED]</button>
+<button onclick="show('file2')">DOSSIER: [REDACTED]</button>
   <button onclick="show('file3')">[REDACTED]</button>
   <button onclick="show('file1')">DOSSIER: ELLIOT</button>
   <button onclick="show('file4')">[REDACTED]</button>
@@ -119,61 +121,64 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 
 <main>
 <div id="file1" class="section active">
- <h2>PIXANDRA V. ELLIOT</h2>
- <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra" alt="Pixandra Elliot">
- <p><b>Rank:</b> O2</p>
- <p><b>Status:</b> ACTIVE</p>
- <p><b>LORE:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
+<h2>PIXANDRA V. ELLIOT</h2>
+<img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra" alt="Pixandra">
+<p><b>Rank:</b> O2</p>
+<p><b>Status:</b> ACTIVE</p>
+<p><b>LORE:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
 <div class="log-stream" id="log1"></div>
+<input id="terminalInput" placeholder="Enter command here" class="fake-terminal-command">
+<div class="fake-notice">NOTICE: All activity logged</div>
+<div class="fake-alert">ALERT: Unusual login pattern detected</div>
+<div class="fake-terminal-output" id="fakeOutput1"></div>
 </main>
 </div>
 </div>
 
 <script>
-// Boot animation -> fade to login
+// Boot animation ends, show login
 window.onload = function(){
   setTimeout(()=>{
-    const boot=document.getElementById("boot-screen");
-    boot.style.opacity="0";
-    setTimeout(()=>{
-      boot.style.display="none";
-      const login=document.getElementById("login");
-      login.style.display="flex";
-      setTimeout(()=>{login.style.opacity="1";},50);
-    },1000);
-  },2500);
+    document.getElementById("boot-screen").style.display="none";
+    document.getElementById("login").style.display="flex";
+  },2500); // 2.5s
 }
 
-// SHOW SECTION
+// Show sections
 function show(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-// LOGIN FUNCTION (NO PASSWORD REQUIRED)
+// Login function
 function login(){
-  const loginScreen=document.getElementById("login");
-  loginScreen.style.opacity="0";
-  setTimeout(()=>{loginScreen.style.display="none";},500);
+  const u = document.getElementById("user").value.trim();
+  const p = document.getElementById("pass").value.trim();
+  const msg = document.getElementById("lockMsg");
 
-  const system=document.getElementById("system");
-  system.style.display="block";
+  if(u === "OWL" && p === "ENDURE"){
+    document.getElementById("login").style.display="none";
+    document.getElementById("system").style.display="block";
 
-  startFakeLogs();
-  startSessionTimer();
+    startFakeLogs();
+    startSessionTimer();
+  } else {
+    msg.textContent="ACCESS DENIED";
+  }
 }
 
-// FAKE LOG STREAM
+// Fake log stream
 function startFakeLogs(){
-  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…"];
-  ["log1"].forEach(id=>{
+  const msgs = ["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…","Node sync active","Firewall bypass"];
+  ["log1","fakeOutput1"].forEach(id=>{
     const el=document.getElementById(id); if(!el) return;
-    let i=0; setInterval(()=>{el.textContent+=msgs[i%msgs.length]+"\n";el.scrollTop=el.scrollHeight;i++;},300);
+    let i=0; setInterval(()=>{el.textContent+=msgs[i%msgs.length]+"\n";el.scrollTop=el.scrollHeight;i++;},400);
   });
 }
 
-// SESSION TIMER
+// Session timer
 function startSessionTimer(){let sec=0; let min=0; setInterval(()=>{sec++; if(sec>59){sec=0; min++;}document.getElementById("sessionTimer").textContent=(min<10?"0":"")+min+":"+(sec<10?"0":"")+sec;},1000);}
 </script>
+
 </body>
 </html>
