@@ -67,18 +67,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 .section{display:none;}
 .section.active{display:block;}
 .redacted{background:white;color:white;padding:0 6px;}
-.progress{width:100%;border:1px solid white;height:20px;margin-bottom:10px;position:relative;overflow:hidden;}
-.progress-bar{height:100%;width:0%;background:white;transition:width 0.1s linear;}
-.blink{animation:blink 1s steps(1) infinite;}
-@keyframes blink{50%{opacity:0}}
-.pixandra{width:350px;border:2px solid white;filter:grayscale(100%) contrast(120%);}
 .log-stream{height:150px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;font-size:12px;background:black;}
-.fake-notice{border:1px solid white;padding:5px;margin:5px 0;font-size:12px;}
-.fake-alert{color:red;font-weight:bold;}
-.fake-terminal-output{height:100px;overflow-y:auto;border:1px solid white;padding:5px;margin:5px 0;font-size:12px;background:black;}
-.fake-terminal-command{width:100%;background:black;color:white;border:1px solid white;padding:8px;margin-top:10px;font-family:"Courier New",monospace;}
-.fake-cursor{display:inline-block;width:10px;background:white;margin-left:2px;animation:blinkCursor 1s steps(1) infinite;}
-@keyframes blinkCursor{50%{opacity:0;}100%{opacity:1;}}
 </style>
 </head>
 <body>
@@ -97,7 +86,6 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
   <p>User ID:</p><input id="user">
   <p>Clearance Key:</p><input id="pass" type="password"><br>
   <button onclick="login()">LOGIN</button>
-  <p id="lockMsg"></p>
 </div>
 
 <!-- SYSTEM -->
@@ -118,10 +106,9 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <main>
 <div id="file1" class="section active">
 <h2>PIXANDRA V. ELLIOT</h2>
-<img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra">
 <p><b>Rank:</b> O2</p>
 <p><b>Status:</b> ACTIVE</p>
-<p><b>LORE:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
+  <p><b>LORE:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
 <div class="log-stream" id="log1"></div>
 </main>
 </div>
@@ -130,18 +117,15 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <script>
 // Boot animation -> fade to login
 window.onload = function(){
-  // First show boot for 2.5s
   setTimeout(()=>{
-    // fade out boot screen
     const boot=document.getElementById("boot-screen");
     boot.style.opacity="0";
     setTimeout(()=>{
       boot.style.display="none";
-      // show login with fade
       const login=document.getElementById("login");
       login.style.display="flex";
       setTimeout(()=>{login.style.opacity="1";},50);
-    },1000); // 1s fade
+    },1000);
   },2500);
 }
 
@@ -151,34 +135,22 @@ function show(id){
   document.getElementById(id).classList.add("active");
 }
 
-// LOGIN FUNCTION
+// LOGIN FUNCTION (NO PASSWORD REQUIRED)
 function login(){
-  const u=document.getElementById("user").value.trim();
-  const p=document.getElementById("pass").value.trim();
-  const msg=document.getElementById("lockMsg");
-  if(u!=="pixelseee"||p!=="ENDURE"){msg.textContent="ACCESS DENIED"; return;}
-  
-  // Hide login
-  const login=document.getElementById("login");
-  login.style.opacity="0";
-  setTimeout(()=>{login.style.display="none";},500);
-  
-  // Show system
-  const sys=document.getElementById("system");
-  sys.style.display="block";
+  const loginScreen=document.getElementById("login");
+  loginScreen.style.opacity="0";
+  setTimeout(()=>{loginScreen.style.display="none";},500);
 
-  // Start system features
-  startDecrypt();
+  const system=document.getElementById("system");
+  system.style.display="block";
+
   startFakeLogs();
   startSessionTimer();
 }
 
-// FAKE DECRYPT
-function startDecrypt(){["bar1","bar2","bar3"].forEach(id=>{let w=0;setInterval(()=>{w=(w+Math.random()*6)%100;document.getElementById(id)?.style.width=w+"%";},120);});}
-
 // FAKE LOG STREAM
 function startFakeLogs(){
-  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…","Node sync active","Firewall bypass","Shadow ops initiated"];
+  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…"];
   ["log1"].forEach(id=>{
     const el=document.getElementById(id); if(!el) return;
     let i=0; setInterval(()=>{el.textContent+=msgs[i%msgs.length]+"\n";el.scrollTop=el.scrollHeight;i++;},300);
