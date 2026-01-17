@@ -5,15 +5,33 @@
 <title>OWL SECURE INTRANET</title>
 <style>
 /* ========================================== */
-/* BASIC RESET & GLOBAL STYLES */
+/* GLOBAL RESET & FONT */
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:black;color:white;font-family:"Courier New",monospace;overflow:hidden;}
 /* ========================================== */
-/* BOOT SCREEN */
+/* TV STATIC OVERLAY */
+#static{
+  position:fixed; inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  animation:staticAnim 0.05s steps(2) infinite;
+  z-index:9998;
+}
+@keyframes staticAnim{0%{background-position:0 0;}100%{background-position:0 2px;}}
+
+/* ========================================== */
+/* BOOT LOGO */
 #boot-screen{
-  position:fixed; inset:0; display:flex;
+  position:fixed; inset:0;
+  display:flex; flex-direction:column;
   justify-content:center; align-items:center;
-  background:black; z-index:9999; flex-direction:column;
+  background:black; z-index:9999;
 }
 #boot-logo{
   width:220px; opacity:0;
@@ -24,39 +42,8 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
   margin-top:20px; color:white; font-size:14px;
   opacity:0; animation:msgFade 3s ease forwards;
 }
-@keyframes logoFade{
-  0%{opacity:0; transform:scale(0.8);}
-  50%{opacity:1; transform:scale(1);}
-  100%{opacity:1; transform:scale(1);}
-}
-@keyframes msgFade{
-  0%{opacity:0;}
-  50%{opacity:0.5;}
-  100%{opacity:1;}
-}
-
-/* ========================================== */
-/* TV STATIC */
-#static{
-  position:fixed; inset:0; pointer-events:none;
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02) 1px, transparent 1px, transparent 2px);
-  animation:staticAnim 0.1s steps(2) infinite;
-  z-index:9998;
-}
-@keyframes staticAnim{0%{background-position:0 0;}100%{background-position:0 2px;}}
-
-/* ========================================== */
-/* LOGIN SCREEN */
-#login{
-  position:fixed; inset:0; display:flex;
-  flex-direction:column; justify-content:center; align-items:center;
-  background:black; padding:40px; z-index:1;
-  animation:fadeIn 1s ease forwards;
-}
-input,button{background:black;color:white;border:1px solid white;padding:8px;width:300px;font-family:inherit;}
-button{cursor:pointer;margin-top:10px;}
-button:hover{background:white;color:black;}
-@keyframes fadeIn{0%{opacity:0;}100%{opacity:1;}}
+@keyframes logoFade{0%{opacity:0; transform:scale(0.8);}50%{opacity:1; transform:scale(1);}100%{opacity:1; transform:scale(1);}}
+@keyframes msgFade{0%{opacity:0;}50%{opacity:0.5;}100%{opacity:1;}}
 
 /* ========================================== */
 /* SYSTEM UI */
@@ -75,43 +62,33 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 .blink{animation:blink 1s steps(1) infinite;}
 @keyframes blink{50%{opacity:0}}
 .pixandra{width:350px;border:2px solid white;filter:grayscale(100%) contrast(120%);}
-.log-stream{height:150px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;font-size:12px;}
+.log-stream{height:150px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;font-size:12px;background:black;}
 #terminalInput{width:100%;background:black;color:white;border:1px solid white;padding:8px;margin-top:10px;font-family:"Courier New",monospace;}
-.hidden{color:black;background:black;}
-
-/* ========================================== */
-/* EXTRA EFFECTS: SCREEN SHAKE */
-@keyframes shake{0%{transform:translate(0,0);}25%{transform:translate(2px,-2px);}50%{transform:translate(-2px,2px);}75%{transform:translate(1px,-1px);}100%{transform:translate(0,0);}}
-
-/* EXTRA EFFECTS: FAKE TERMINAL CURSOR */
-.cursor{display:inline-block;width:10px;background:white;margin-left:2px;animation:blinkCursor 1s steps(1) infinite;}
-@keyframes blinkCursor{50%{opacity:0;}100%{opacity:1;}}
-
-/* ADDITIONAL STYLES FOR BLOATED FEATURES */
 .fake-notice{border:1px solid white;padding:5px;margin:5px 0;font-size:12px;}
 .fake-alert{color:red;font-weight:bold;}
-.fake-timer{float:right;font-size:12px;}
 .fake-terminal-output{height:100px;overflow-y:auto;border:1px solid white;padding:5px;margin:5px 0;font-size:12px;background:black;}
+.fake-cursor{display:inline-block;width:10px;background:white;margin-left:2px;animation:blinkCursor 1s steps(1) infinite;}
+@keyframes blinkCursor{50%{opacity:0;}100%{opacity:1;}}
+@keyframes shake{0%{transform:translate(0,0);}25%{transform:translate(2px,-2px);}50%{transform:translate(-2px,2px);}75%{transform:translate(1px,-1px);}100%{transform:translate(0,0);}}
+
+/* ========================================== */
+/* MULTIPLE EXTRA STYLES FOR BLOATED EFFECTS */
+.fake-popup{border:2px solid white;padding:10px;margin:10px 0;background:black;}
+.fake-loader{width:100%;border:1px solid white;height:20px;margin:5px 0;position:relative;}
+.fake-loader-bar{height:100%;width:0%;background:white;}
+.fake-scroll{height:200px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;}
+.fake-terminal-command{width:100%;background:black;color:white;border:1px solid white;padding:8px;margin-top:10px;font-family:"Courier New",monospace;}
 </style>
 </head>
 <body>
 
-<!-- STATIC -->
+<!-- TV STATIC -->
 <div id="static"></div>
 
-<!-- BOOT SCREEN -->
+<!-- BOOT LOGO -->
 <div id="boot-screen">
   <img src="OWL LOGO.jpeg" id="boot-logo" alt="OWL Logo">
   <div id="boot-msg">Initializing OWL Secure Node...</div>
-</div>
-
-<!-- LOGIN -->
-<div id="login">
-  <h2>OWL INTERNAL AUTHENTICATION</h2>
-  <p>User ID:</p><input id="user">
-  <p>Clearance Key:</p><input id="pass" type="password"><br>
-  <button onclick="login()">LOGIN</button>
-  <p id="lockMsg"></p>
 </div>
 
 <!-- SYSTEM -->
@@ -119,7 +96,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <header>
   <b>ORDER OF THE WHITE LOTUS — INTERNAL NETWORK</b><br>
   Clearance: O3+ VERIFIED | STATUS: ACTIVE
-  <span class="fake-timer" id="sessionTimer">00:00</span>
+  <span id="sessionTimer" style="float:right;font-size:12px;">00:00</span>
 </header>
 
 <div class="container">
@@ -142,7 +119,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <p><b>Rank:</b> O2</p>
 <p><b>Status:</b> ACTIVE</p>
 <div class="log-stream" id="log1"></div>
-<input id="terminalInput" placeholder="Enter command here">
+<input id="terminalInput" placeholder="Enter command here" class="fake-terminal-command">
 <div class="fake-notice">NOTICE: All activity logged</div>
 <div class="fake-alert">ALERT: Unusual login pattern detected</div>
 <div class="fake-terminal-output" id="fakeOutput1"></div>
@@ -153,7 +130,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <h2>POLARIS</h2>
 <p>Status: <span class="redacted">CLASSIFIED</span></p>
 <div class="log-stream" id="log2"></div>
-<input id="terminalInput2" placeholder="Enter command here">
+<input id="terminalInput2" placeholder="Enter command here" class="fake-terminal-command">
 <div class="fake-notice">NOTICE: Encryption active</div>
 <div class="fake-terminal-output" id="fakeOutput2"></div>
 </div>
@@ -166,7 +143,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <li>Agent C3 — <span class="redacted">CLASSIFIED</span></li>
 </ul>
 <div class="log-stream" id="log3"></div>
-<input id="terminalInput3" placeholder="Enter command here">
+<input id="terminalInput3" placeholder="Enter command here" class="fake-terminal-command">
 <div class="fake-terminal-output" id="fakeOutput3"></div>
 </div>
 
@@ -177,7 +154,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <div class="progress"><div class="progress-bar" id="bar2"></div></div>
 <div class="progress"><div class="progress-bar" id="bar3"></div></div>
 <div class="log-stream" id="logOps"></div>
-<input id="terminalOps" placeholder="Enter command here">
+<input id="terminalOps" placeholder="Enter command here" class="fake-terminal-command">
 <div class="fake-terminal-output" id="fakeOutputOps"></div>
 </div>
 
@@ -188,7 +165,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <li>/FOUNDATION/ <span class="redacted">LOCKED</span></li>
 <li class="hidden">/SYSTEM32/</li>
 </ul>
-<input id="terminalDirs" placeholder="Enter command here">
+<input id="terminalDirs" placeholder="Enter command here" class="fake-terminal-command">
 <div class="fake-terminal-output" id="fakeOutputDirs"></div>
 </div>
 
@@ -200,7 +177,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 [00:16] OBSERVER IS SUBJECT
 </pre>
 <span class="blink">█</span>
-<input id="terminalLogs" placeholder="Enter command here">
+<input id="terminalLogs" placeholder="Enter command here" class="fake-terminal-command">
 <div class="fake-terminal-output" id="fakeOutputLogs"></div>
 </div>
 
@@ -216,7 +193,7 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <!-- TERMINAL -->
 <div id="console" class="section">
 <h2>TERMINAL</h2>
-<input id="terminalInputConsole" placeholder="Type command..." style="width:100%;padding:8px;margin-top:10px;background:black;color:white;border:1px solid white;">
+<input id="terminalInputConsole" placeholder="Type command..." class="fake-terminal-command">
 <div class="fake-terminal-output" id="fakeOutputConsole"></div>
 </div>
 
@@ -227,45 +204,27 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <audio id="beep" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
 
 <script>
-// LOGIN
-function login(){
-  const u=document.getElementById("user").value.trim();
-  const p=document.getElementById("pass").value.trim();
-  const msg=document.getElementById("lockMsg");
-  if(u!=="pixelseee"||p!=="ENDURE"){
-    msg.textContent="ACCESS DENIED";
-    return;
-  }
-  document.getElementById("login").style.display="none";
-  document.getElementById("boot-screen").style.display="none";
-  document.getElementById("system").style.display="block";
-  startDecrypt(); startFakeLogs(); startSessionTimer();
-}
-
-// DECRYPT
-function startDecrypt(){
-  ["bar1","bar2","bar3"].forEach(id=>{
-    let w=0; setInterval(()=>{w=(w+Math.random()*6)%100; document.getElementById(id).style.width=w+"%";},120);
-  });
-}
+// AUTO START SYSTEM AFTER LOGO
+window.addEventListener("load",()=>{
+  setTimeout(()=>{document.getElementById("boot-screen").style.display="none";document.getElementById("system").style.display="block";startDecrypt();startFakeLogs();startSessionTimer();},3000);
+});
 
 // SHOW SECTION
-function show(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
+function show(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
 
-// FAKE LOGS
+// FAKE DECRYPT
+function startDecrypt(){["bar1","bar2","bar3"].forEach(id=>{let w=0;setInterval(()=>{w=(w+Math.random()*6)%100;document.getElementById(id).style.width=w+"%";},120);});}
+
+// FAKE LOG STREAM
 function startFakeLogs(){
-  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…"];
+  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…","Node sync active","Firewall bypass","Shadow ops initiated","Scanning hidden nodes","Traffic masking","Data fragmenting","Protocol check","Secure channel active"];
   ["log1","log2","log3","logOps","fakeOutput1","fakeOutput2","fakeOutput3","fakeOutputOps","fakeOutputDirs","fakeOutputLogs","fakeOutputAlerts","fakeOutputConsole"].forEach(id=>{
-    const el=document.getElementById(id); let i=0;
-    setInterval(()=>{el.textContent+=msgs[i%msgs.length]+"\n"; el.scrollTop=el.scrollHeight; i++;},400);
+    const el=document.getElementById(id); let i=0; setInterval(()=>{el.textContent+=msgs[i%msgs.length]+"\n";el.scrollTop=el.scrollHeight;i++;},300);
   });
 }
 
 // SESSION TIMER
-function startSessionTimer(){let sec=0; let min=0; setInterval(()=>{sec++; if(sec>59){sec=0; min++;} document.getElementById("sessionTimer").textContent=(min<10?"0":"")+min+":"+(sec<10?"0":"")+sec;},1000);}
+function startSessionTimer(){let sec=0; let min=0; setInterval(()=>{sec++; if(sec>59){sec=0; min++;}document.getElementById("sessionTimer").textContent=(min<10?"0":"")+min+":"+(sec<10?"0":"")+sec;},1000);}
 </script>
 </body>
 </html>
