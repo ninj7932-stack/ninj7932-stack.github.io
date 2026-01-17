@@ -6,6 +6,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:black;color:white;font-family:"Courier New",monospace;overflow:hidden;}
+
 /* TV STATIC */
 #static{
   position:fixed; inset:0;
@@ -44,7 +45,8 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
 /* LOGIN SCREEN */
 #login{
   position:fixed; inset:0;
-  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  display:none; /* initially hidden until boot animation finishes */
+  flex-direction:column; justify-content:center; align-items:center;
   background:black; padding:40px;
   z-index:9997;
 }
@@ -117,7 +119,6 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 </nav>
 
 <main>
-<!-- FILE 1 -->
 <div id="file1" class="section active">
 <h2>PIXANDRA V. ELLIOT</h2>
 <img src="DEED3BAC-5E74-4449-8E32-F670BD12754F.png" class="pixandra">
@@ -129,18 +130,19 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <div class="fake-notice">NOTICE: All activity logged</div>
 <div class="fake-alert">ALERT: Unusual login pattern detected</div>
 <div class="fake-terminal-output" id="fakeOutput1"></div>
-</div>
-
-<!-- More sections (file2, file3, ops, dirs, logs, alerts, console) same as your previous code -->
-<!-- Skipping to keep example concise -->
-
 </main>
 </div>
 </div>
 
-<audio id="beep" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
-
 <script>
+// After boot animation, show login screen
+window.onload = function(){
+  setTimeout(()=>{
+    document.getElementById("boot-screen").style.display="none";
+    document.getElementById("login").style.display="flex";
+  },2500); // 2.5s boot fade
+}
+
 // SHOW SECTION
 function show(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
 
@@ -151,9 +153,8 @@ function login(){
   const msg=document.getElementById("lockMsg");
   if(u!=="pixelseee"||p!=="ENDURE"){msg.textContent="ACCESS DENIED"; return;}
   
-  // Hide login & boot screen
+  // Hide login
   document.getElementById("login").style.display="none";
-  document.getElementById("boot-screen").style.display="none";
   
   // Show system
   document.getElementById("system").style.display="block";
