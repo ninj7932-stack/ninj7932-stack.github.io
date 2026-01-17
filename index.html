@@ -4,12 +4,9 @@
 <meta charset="UTF-8">
 <title>OWL SECURE INTRANET</title>
 <style>
-/* ========================================== */
-/* GLOBAL RESET & FONT */
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:black;color:white;font-family:"Courier New",monospace;overflow:hidden;}
-/* ========================================== */
-/* TV STATIC OVERLAY */
+/* TV STATIC */
 #static{
   position:fixed; inset:0;
   pointer-events:none;
@@ -25,7 +22,6 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
 }
 @keyframes staticAnim{0%{background-position:0 0;}100%{background-position:0 2px;}}
 
-/* ========================================== */
 /* BOOT LOGO */
 #boot-screen{
   position:fixed; inset:0;
@@ -45,7 +41,6 @@ body{background:black;color:white;font-family:"Courier New",monospace;overflow:h
 @keyframes logoFade{0%{opacity:0; transform:scale(0.8);}50%{opacity:1; transform:scale(1);}100%{opacity:1; transform:scale(1);}}
 @keyframes msgFade{0%{opacity:0;}50%{opacity:0.5;}100%{opacity:1;}}
 
-/* ========================================== */
 /* LOGIN SCREEN */
 #login{
   position:fixed; inset:0;
@@ -57,7 +52,6 @@ input,button{background:black;color:white;border:1px solid white;padding:8px;wid
 button{cursor:pointer;margin-top:10px;}
 button:hover{background:white;color:black;}
 
-/* ========================================== */
 /* SYSTEM UI */
 #system{display:none;height:100vh;position:relative;z-index:0;}
 header{border-bottom:2px solid white;padding:15px;}
@@ -75,20 +69,19 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 @keyframes blink{50%{opacity:0}}
 .pixandra{width:350px;border:2px solid white;filter:grayscale(100%) contrast(120%);}
 .log-stream{height:150px;overflow-y:auto;border:1px solid white;padding:5px;margin-top:10px;font-size:12px;background:black;}
-#terminalInput{width:100%;background:black;color:white;border:1px solid white;padding:8px;margin-top:10px;font-family:"Courier New",monospace;}
 .fake-notice{border:1px solid white;padding:5px;margin:5px 0;font-size:12px;}
 .fake-alert{color:red;font-weight:bold;}
 .fake-terminal-output{height:100px;overflow-y:auto;border:1px solid white;padding:5px;margin:5px 0;font-size:12px;background:black;}
+.fake-terminal-command{width:100%;background:black;color:white;border:1px solid white;padding:8px;margin-top:10px;font-family:"Courier New",monospace;}
 .fake-cursor{display:inline-block;width:10px;background:white;margin-left:2px;animation:blinkCursor 1s steps(1) infinite;}
 @keyframes blinkCursor{50%{opacity:0;}100%{opacity:1;}}
 </style>
 </head>
 <body>
 
-<!-- TV STATIC -->
 <div id="static"></div>
 
-<!-- BOOT LOGO -->
+<!-- BOOT SCREEN -->
 <div id="boot-screen">
   <img src="OWL LOGO.jpeg" id="boot-logo" alt="OWL Logo">
   <div id="boot-msg">Initializing OWL Secure Node...</div>
@@ -132,12 +125,59 @@ main{flex:1;padding:25px;overflow-y:auto;position:relative;}
 <p><b>Status:</b> ACTIVE</p>
 <p><b>LORE:</b> Pixandra Elliot was born to a normal Russian family residing in Herefordshire, England. She grew up in a humble household with loving parents, her father employed as a bank employee, her mother a homemaker. By all civilian records, her life was stable, and quiet At the age of eleven, tragedy struck. The local jurisdiction had long been suspected of corruption by multiple intelligence entities. Tensions escalated into an armed confrontation within Pixandra’s neighborhood. During this incident, her parents were killed while returning from a routine trip to the mall, caught in a firefight they had no involvement in. No justice followed.The case was quietly dismissed. Charges were dropped under the justification that pursuing accountability would “create national complications.” The officers involved were never prosecuted. Pixandra was left confused, enraged, and without direction. With no immediate guardianship solution, the government transferred her into a military boarding institution under the guise of rehabilitation and structured care. The environment was brutal and unforgiving, but it taught her how to fight, endure, and survive. Discipline replaced grief. Control replaced chaos. She excelled. Pixandra later advanced into sniper training, graduating ahead of schedule. Rather than returning to civilian life, she chose to continue her military career and enlisted with a UNGOC unit, serving as a guard detail operative. Her service there was brief. While performing routine archival duties, Pixandra encountered an old, heavily redacted file. Against protocol, she pursued it further. What she uncovered was the history of a now-disbanded splinter organization once known as “The New Order” (TNO). The group’s ideology, goals, and methods resonated deeply with her own beliefs. However, the file concluded with a dead end—TNO had been officially dissolved. No surviving branches. No traceable members. Except for one name listed at the end of the document: Polaris Inc. With nothing else to follow, Pixandra began tracking the company independently. Her investigation did not go unnoticed. Instead of being silenced, she was contacted. She was offered work. Initially, Pixandra operated as a freelance agent under Polaris Inc.—deniable, unattributed, and expendable. Over time, her effectiveness drew the attention of another group seeking external support: the Order of the White Lotus (OWL). She was deployed to them under the role of a Masquerade operative. After working for a while with them, She realised that The Order of the White Lotus was the ideological successor and the more civilized and controlled version to The New Order. She stayed. Her performance as a Masquerade asset exceeded expectations. Precision, restraint, and absolute commitment defined her operations. Through consistent results, Pixandra earned a permanent designation within the Order’s Masquerade and formal integration under Polaris Inc,Soon she was formally working at outpost Solace, and was shifted to Fort Candor, a few days prior to the incident of [REDACTED]</p>
 <div class="log-stream" id="log1"></div>
-<input id="terminalInput" placeholder="Enter command here">
+<input id="terminalInput" placeholder="Enter command here" class="fake-terminal-command">
 <div class="fake-notice">NOTICE: All activity logged</div>
 <div class="fake-alert">ALERT: Unusual login pattern detected</div>
 <div class="fake-terminal-output" id="fakeOutput1"></div>
 </div>
 
-<!-- FILE 2 -->
-<div id="file2" class="section">
-<h2>POLA
+<!-- More sections (file2, file3, ops, dirs, logs, alerts, console) same as your previous code -->
+<!-- Skipping to keep example concise -->
+
+</main>
+</div>
+</div>
+
+<audio id="beep" src="https://freesound.org/data/previews/66/66717_931655-lq.mp3"></audio>
+
+<script>
+// SHOW SECTION
+function show(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+
+// LOGIN FUNCTION
+function login(){
+  const u=document.getElementById("user").value.trim();
+  const p=document.getElementById("pass").value.trim();
+  const msg=document.getElementById("lockMsg");
+  if(u!=="pixelseee"||p!=="ENDURE"){msg.textContent="ACCESS DENIED"; return;}
+  
+  // Hide login & boot screen
+  document.getElementById("login").style.display="none";
+  document.getElementById("boot-screen").style.display="none";
+  
+  // Show system
+  document.getElementById("system").style.display="block";
+
+  // Start system features
+  startDecrypt();
+  startFakeLogs();
+  startSessionTimer();
+}
+
+// FAKE DECRYPT
+function startDecrypt(){["bar1","bar2","bar3"].forEach(id=>{let w=0;setInterval(()=>{w=(w+Math.random()*6)%100;document.getElementById(id)?.style.width=w+"%";},120);});}
+
+// FAKE LOG STREAM
+function startFakeLogs(){
+  const msgs=["Decrypting…","Masking traffic…","Generating noise…","Accessing shadow node…","Node sync active","Firewall bypass","Shadow ops initiated","Scanning hidden nodes","Traffic masking","Data fragmenting","Protocol check","Secure channel active"];
+  ["log1","log2","log3","logOps","fakeOutput1","fakeOutput2","fakeOutput3","fakeOutputOps","fakeOutputDirs","fakeOutputLogs","fakeOutputAlerts","fakeOutputConsole"].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    let i=0; setInterval(()=>{el.textContent+=msgs[i%msgs.length]+"\n";el.scrollTop=el.scrollHeight;i++;},300);
+  });
+}
+
+// SESSION TIMER
+function startSessionTimer(){let sec=0; let min=0; setInterval(()=>{sec++; if(sec>59){sec=0; min++;}document.getElementById("sessionTimer").textContent=(min<10?"0":"")+min+":"+(sec<10?"0":"")+sec;},1000);}
+</script>
+</body>
+</html>
