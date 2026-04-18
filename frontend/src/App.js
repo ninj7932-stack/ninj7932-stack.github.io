@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import BootSequence from './components/BootSequence';
 import Dashboard from './components/Dashboard';
+import EnlistingPage from './components/EnlistingPage';
 import { getUserSession, setUserSession, clearUserSession } from './utils/localStorage';
 
 function App() {
   const [isBooting, setIsBooting] = useState(true);
+  const [isEnlisting, setIsEnlisting] = useState(false);
   const [user, setUser] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
@@ -22,12 +24,24 @@ function App() {
     setUser(userData);
     setUserSession(userData);
     setIsBooting(false);
+    setIsEnlisting(false);
+  };
+
+  const handleEnlisting = () => {
+    setIsEnlisting(true);
+    setIsBooting(false);
+  };
+
+  const handleBackToLogin = () => {
+    setIsEnlisting(false);
+    setIsBooting(true);
   };
 
   const handleLogout = () => {
     clearUserSession();
     setUser(null);
     setIsBooting(true);
+    setIsEnlisting(false);
   };
 
   const toggleSound = () => {
@@ -39,9 +53,12 @@ function App() {
       {/* CRT Scanlines overlay - always visible */}
       <div className="crt-scanlines"></div>
 
-      {isBooting ? (
+      {isEnlisting ? (
+        <EnlistingPage onBack={handleBackToLogin} />
+      ) : isBooting ? (
         <BootSequence 
-          onComplete={handleBootComplete} 
+          onComplete={handleBootComplete}
+          onEnlisting={handleEnlisting}
           soundEnabled={soundEnabled}
         />
       ) : (

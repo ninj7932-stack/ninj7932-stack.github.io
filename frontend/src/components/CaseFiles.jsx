@@ -1,136 +1,208 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Plus, Search, X, Eye, Trash2, Edit2 } from 'lucide-react';
-import { getCaseFiles, addCaseFile, deleteCaseFile, searchCaseFiles, updateCaseFile } from '../utils/localStorage';
+import { FileText, Plus, Search, X, Eye, Trash2, Edit2, Save } from 'lucide-react';
 import { playClick, playSuccess, playError } from '../utils/sounds';
+import axios from 'axios';
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const CaseFiles = ({ user, soundEnabled }) => {
   const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [editingFile, setEditingFile] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     operativeName: '',
     date: new Date().toISOString().split('T')[0],
-    classification: 'SAFE',
+    classification: 'STANDARD',
     description: '',
     attachments: [],
     redacted: false
   });
 
+  const isAdmin = user?.isAdmin || user?.rank === 'O5' || user?.displayName === 'Task Master';
+
   useEffect(() => {
-    setFiles(getCaseFiles());
+    fetchCaseFiles();
   }, []);
 
-  useEffect(() => {
-    if (searchQuery) {
-      setFiles(searchCaseFiles(searchQuery));
-    } else {
-      setFiles(getCaseFiles());
+  const fetchCaseFiles = async () => {
+    try {
+      const response = await axios.get(`${API}/case-files`);
+      setFiles(response.data);
+    } catch (error) {
+      console.error('Error fetching case files:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [searchQuery]);
+  };
 
-  const handleSubmit = (e) => {
+  const filteredFiles = files.filter(file =>
+    file.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    file.operativeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    file.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    file.id?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.description) {
       if (soundEnabled) playError();
       return;
     }
 
-    const newFile = addCaseFile({
-      ...formData,
-      operativeName: formData.operativeName || user?.operativeId || 'ANONYMOUS'
-    });
-    
-    setFiles(getCaseFiles());
-    setFormData({
-      title: '',
-      operativeName: '',
-      date: new Date().toISOString().split('T')[0],
-      classification: 'SAFE',
-      description: '',
-      attachments: [],
-      redacted: false
-    });
-    setShowForm(false);
-    if (soundEnabled) playSuccess();
-  };
+    try {
+      const fileData = {
+        ...formData,
+        operativeName: formData.operativeName || user?.clearanceLevel || 'Anonymous',
+        createdBy: user?.displayName || 'Unknown'
+      };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this case file? This action cannot be undone.')) {
-      deleteCaseFile(id);
-      setFiles(getCaseFiles());
-      setSelectedFile(null);
-      if (soundEnabled) playClick();
+      if (editingFile) {
+        await axios.put(`${API}/case-files/${editingFile.id}`, fileData);
+      } else {
+        await axios.post(`${API}/case-files`, fileData);
+      }
+
+      if (soundEnabled) playSuccess();
+      setShowForm(false);
+      setEditingFile(null);
+      setFormData({
+        title: '',
+        operativeName: '',
+        date: new Date().toISOString().split('T')[0],
+        classification: 'STANDARD',
+        description: '',
+        attachments: [],
+        redacted: false
+      });
+      fetchCaseFiles();
+    } catch (error) {
+      console.error('Error saving case file:', error);
+      if (soundEnabled) playError();
     }
   };
 
-  const toggleRedaction = (id) => {
-    const file = files.find(f => f.id === id);
-    if (file) {
-      updateCaseFile(id, { redacted: !file.redacted });
-      setFiles(getCaseFiles());
+  const handleDelete = async (id) => {
+    if (!window.confirm('Delete this case file? This action cannot be undone.')) return;
+
+    try {
+      await axios.delete(`${API}/case-files/${id}`);
       if (soundEnabled) playClick();
+      setSelectedFile(null);
+      fetchCaseFiles();
+    } catch (error) {
+      console.error('Error deleting case file:', error);
+    }
+  };
+
+  const handleEdit = (file) => {
+    setEditingFile(file);
+    setFormData({
+      title: file.title,
+      operativeName: file.operativeName,
+      date: file.date,
+      classification: file.classification,
+      description: file.description,
+      attachments: file.attachments || [],
+      redacted: file.redacted
+    });
+    setShowForm(true);
+    setSelectedFile(null);
+  };
+
+  const toggleRedaction = async (file) => {
+    try {
+      await axios.put(`${API}/case-files/${file.id}`, { redacted: !file.redacted });
+      if (soundEnabled) playClick();
+      fetchCaseFiles();
+      if (selectedFile?.id === file.id) {
+        setSelectedFile({ ...selectedFile, redacted: !file.redacted });
+      }
+    } catch (error) {
+      console.error('Error toggling redaction:', error);
     }
   };
 
   const getClassificationStyle = (classification) => {
     switch (classification) {
-      case 'KETER':
-        return 'border-red-500 text-red-500';
-      case 'EUCLID':
-        return 'border-yellow-500 text-yellow-500';
-      case 'THAUMIEL':
-        return 'border-purple-500 text-purple-500';
+      case 'CRITICAL':
+        return 'badge-critical';
+      case 'HIGH PRIORITY':
+        return 'badge-high';
+      case 'CONFIDENTIAL':
+        return 'badge-confidential';
       default:
-        return 'border-green-500 text-green-500';
+        return 'badge-standard';
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-white/50">Loading case files...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-4" data-testid="case-files">
+    <div className="space-y-6" data-testid="case-files">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-lg font-bold tracking-wider flex items-center gap-2">
-          <FileText size={20} /> CASE FILES DATABASE
-        </h2>
+        <div>
+          <h2 className="text-2xl font-bold tracking-wider flex items-center gap-3" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            <FileText size={28} className="text-[#d4af37]" /> CASE FILES DATABASE
+          </h2>
+          <p className="text-white/50 text-sm mt-1">Documented investigations and evidence</p>
+        </div>
         <button
           onClick={() => {
             setShowForm(!showForm);
+            setEditingFile(null);
             if (soundEnabled) playClick();
           }}
-          className="owl-btn flex items-center gap-2"
+          className="owl-btn owl-btn-accent flex items-center gap-2"
           data-testid="new-case-file-btn"
         >
-          <Plus size={14} /> NEW REPORT
+          <Plus size={16} /> NEW CASE FILE
         </button>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500/50" />
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search case files..."
-          className="owl-input pl-9"
+          placeholder="Search case files by ID, title, operative, or content..."
+          className="owl-input pl-12"
           data-testid="case-files-search"
         />
       </div>
 
-      {/* New File Form */}
+      {/* Admin Badge */}
+      {isAdmin && (
+        <div className="flex items-center gap-2 p-3 border border-[#d4af37]/30 bg-[#d4af37]/5">
+          <span className="admin-badge">ADMIN</span>
+          <span className="text-sm text-white/70">You have edit and delete permissions for all case files.</span>
+        </div>
+      )}
+
+      {/* New/Edit File Form */}
       {showForm && (
         <div className="owl-panel" data-testid="case-file-form">
           <div className="owl-panel-header">
-            <span className="text-xs uppercase tracking-wider">Submit New Case File</span>
-            <button onClick={() => setShowForm(false)} className="text-green-500/60 hover:text-green-500">
-              <X size={14} />
+            <span>{editingFile ? 'EDIT CASE FILE' : 'SUBMIT NEW CASE FILE'}</span>
+            <button onClick={() => { setShowForm(false); setEditingFile(null); }} className="text-white/60 hover:text-white">
+              <X size={16} />
             </button>
           </div>
           <div className="owl-panel-content">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="owl-form-group">
                   <label className="owl-label">Title *</label>
                   <input
@@ -150,17 +222,18 @@ const CaseFiles = ({ user, soundEnabled }) => {
                     value={formData.operativeName}
                     onChange={(e) => setFormData({ ...formData, operativeName: e.target.value })}
                     className="owl-input"
-                    placeholder={user?.operativeId || 'Your callsign...'}
+                    placeholder={user?.clearanceLevel || 'Your designation...'}
                     data-testid="case-file-operative"
                   />
                 </div>
                 <div className="owl-form-group">
                   <label className="owl-label">Date</label>
                   <input
-                    type="date"
+                    type="text"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                     className="owl-input"
+                    placeholder="20██-██-██"
                     data-testid="case-file-date"
                   />
                 </div>
@@ -172,10 +245,10 @@ const CaseFiles = ({ user, soundEnabled }) => {
                     className="owl-select"
                     data-testid="case-file-classification"
                   >
-                    <option value="SAFE">SAFE</option>
-                    <option value="EUCLID">EUCLID</option>
-                    <option value="KETER">KETER</option>
-                    <option value="THAUMIEL">THAUMIEL</option>
+                    <option value="STANDARD">Standard</option>
+                    <option value="HIGH PRIORITY">High Priority</option>
+                    <option value="CRITICAL">Critical</option>
+                    <option value="CONFIDENTIAL">Confidential</option>
                   </select>
                 </div>
               </div>
@@ -185,36 +258,36 @@ const CaseFiles = ({ user, soundEnabled }) => {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="owl-textarea"
-                  placeholder="Detailed case file description..."
+                  placeholder="Detailed case file description, evidence, witness statements..."
                   required
                   data-testid="case-file-description"
                 />
               </div>
               <div className="owl-form-group">
-                <label className="owl-label">Attachments (comma-separated filenames)</label>
+                <label className="owl-label">Attachments (comma-separated)</label>
                 <input
                   type="text"
                   value={formData.attachments.join(', ')}
                   onChange={(e) => setFormData({ ...formData, attachments: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
                   className="owl-input"
-                  placeholder="document.pdf, image.png..."
+                  placeholder="BODYCAM_01.mp4, TESTIMONY.txt, EVIDENCE_PHOTO.jpg..."
                   data-testid="case-file-attachments"
                 />
               </div>
               <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.redacted}
                     onChange={(e) => setFormData({ ...formData, redacted: e.target.checked })}
-                    className="accent-green-500"
+                    className="w-5 h-5 accent-[#d4af37]"
                     data-testid="case-file-redacted"
                   />
-                  <span className="text-xs uppercase tracking-wider">Mark as Redacted</span>
+                  <span className="text-sm uppercase tracking-wider">Mark as Redacted</span>
                 </label>
               </div>
-              <button type="submit" className="owl-btn w-full" data-testid="case-file-submit">
-                SUBMIT CASE FILE
+              <button type="submit" className="owl-btn owl-btn-accent w-full flex items-center justify-center gap-2">
+                {editingFile ? <><Save size={16} /> UPDATE CASE FILE</> : <><FileText size={16} /> SUBMIT CASE FILE</>}
               </button>
             </form>
           </div>
@@ -225,67 +298,75 @@ const CaseFiles = ({ user, soundEnabled }) => {
       {selectedFile && (
         <div className="owl-panel" data-testid="case-file-detail">
           <div className="owl-panel-header">
-            <span className="text-xs uppercase tracking-wider flex items-center gap-2">
-              <FileText size={14} /> {selectedFile.id}
+            <span className="flex items-center gap-3">
+              <FileText size={16} /> {selectedFile.id}
             </span>
-            <button onClick={() => setSelectedFile(null)} className="text-green-500/60 hover:text-green-500">
-              <X size={14} />
+            <button onClick={() => setSelectedFile(null)} className="text-white/60 hover:text-white">
+              <X size={16} />
             </button>
           </div>
           <div className="owl-panel-content">
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold">{selectedFile.title}</h3>
-                <span className={`text-xs border px-2 py-1 ${getClassificationStyle(selectedFile.classification)}`}>
+                <h3 className="text-xl font-bold">{selectedFile.title}</h3>
+                <span className={`badge ${getClassificationStyle(selectedFile.classification)}`}>
                   {selectedFile.classification}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-green-500/60">Operative:</span>{' '}
+                  <span className="text-white/50">Operative:</span>{' '}
                   <span>{selectedFile.operativeName}</span>
                 </div>
                 <div>
-                  <span className="text-green-500/60">Date:</span>{' '}
+                  <span className="text-white/50">Date:</span>{' '}
                   <span>{selectedFile.date}</span>
                 </div>
               </div>
-              <div className="border-t border-green-500/20 pt-4">
-                <div className="text-xs text-green-500/60 mb-2 uppercase">Description</div>
-                <p className={`text-sm leading-relaxed ${selectedFile.redacted ? 'redacted' : ''}`}>
+              <div className="border-t border-white/10 pt-5">
+                <div className="text-xs text-[#d4af37] mb-3 uppercase tracking-wider">Description</div>
+                <p className={`text-sm leading-relaxed ${selectedFile.redacted ? 'redacted' : 'text-white/80'}`}>
                   {selectedFile.description}
                 </p>
               </div>
               {selectedFile.attachments?.length > 0 && (
-                <div className="border-t border-green-500/20 pt-4">
-                  <div className="text-xs text-green-500/60 mb-2 uppercase">Attachments</div>
-                  <div className="space-y-1">
+                <div className="border-t border-white/10 pt-5">
+                  <div className="text-xs text-[#d4af37] mb-3 uppercase tracking-wider">Attachments</div>
+                  <div className="space-y-2">
                     {selectedFile.attachments.map((att, idx) => (
-                      <div key={idx} className="text-xs text-green-500/80 flex items-center gap-2">
-                        <FileText size={12} />
+                      <div key={idx} className="text-sm text-white/70 flex items-center gap-2 p-2 bg-white/5">
+                        <FileText size={14} />
                         {att}
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-              <div className="flex gap-2 pt-4 border-t border-green-500/20">
-                <button
-                  onClick={() => toggleRedaction(selectedFile.id)}
-                  className="owl-btn flex-1 flex items-center justify-center gap-2"
-                  data-testid="toggle-redaction-btn"
-                >
-                  <Edit2 size={14} />
-                  {selectedFile.redacted ? 'DECLASSIFY' : 'REDACT'}
-                </button>
-                <button
-                  onClick={() => handleDelete(selectedFile.id)}
-                  className="owl-btn owl-btn-danger flex-1 flex items-center justify-center gap-2"
-                  data-testid="delete-case-file-btn"
-                >
-                  <Trash2 size={14} /> DELETE
-                </button>
-              </div>
+              {isAdmin && (
+                <div className="flex gap-3 pt-5 border-t border-white/10">
+                  <button
+                    onClick={() => toggleRedaction(selectedFile)}
+                    className="owl-btn flex-1 flex items-center justify-center gap-2"
+                    data-testid="toggle-redaction-btn"
+                  >
+                    <Edit2 size={14} />
+                    {selectedFile.redacted ? 'DECLASSIFY' : 'REDACT'}
+                  </button>
+                  <button
+                    onClick={() => handleEdit(selectedFile)}
+                    className="owl-btn owl-btn-accent flex-1 flex items-center justify-center gap-2"
+                  >
+                    <Edit2 size={14} /> EDIT
+                  </button>
+                  <button
+                    onClick={() => handleDelete(selectedFile.id)}
+                    className="owl-btn owl-btn-danger flex-1 flex items-center justify-center gap-2"
+                    data-testid="delete-case-file-btn"
+                  >
+                    <Trash2 size={14} /> DELETE
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -294,8 +375,8 @@ const CaseFiles = ({ user, soundEnabled }) => {
       {/* Files Table */}
       <div className="owl-panel">
         <div className="owl-panel-header">
-          <span className="text-xs uppercase tracking-wider">Active Case Files</span>
-          <span className="text-xs text-green-500/60">{files.length} records</span>
+          <span>Active Case Files</span>
+          <span className="text-white/50">{filteredFiles.length} records</span>
         </div>
         <div className="overflow-x-auto">
           <table className="owl-table" data-testid="case-files-table">
@@ -310,24 +391,24 @@ const CaseFiles = ({ user, soundEnabled }) => {
               </tr>
             </thead>
             <tbody>
-              {files.length === 0 ? (
+              {filteredFiles.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center text-green-500/60 py-8">
-                    No case files found. Submit a new report to get started.
+                  <td colSpan={6} className="text-center text-white/50 py-12">
+                    No case files found. Submit a new report to document evidence.
                   </td>
                 </tr>
               ) : (
-                files.map((file) => (
-                  <tr key={file.id} className={file.redacted ? 'opacity-70' : ''}>
-                    <td className="font-mono">{file.id}</td>
+                filteredFiles.map((file) => (
+                  <tr key={file.id} className={file.redacted ? 'opacity-60' : ''}>
+                    <td className="font-mono text-[#d4af37]">{file.id}</td>
                     <td className={file.redacted ? 'redacted' : ''}>{file.title}</td>
                     <td>
-                      <span className={`text-xs border px-1 ${getClassificationStyle(file.classification)}`}>
+                      <span className={`badge ${getClassificationStyle(file.classification)}`}>
                         {file.classification}
                       </span>
                     </td>
                     <td>{file.operativeName}</td>
-                    <td className="text-green-500/60">{file.date}</td>
+                    <td className="text-white/50">{file.date}</td>
                     <td>
                       <div className="flex gap-2">
                         <button
@@ -335,20 +416,31 @@ const CaseFiles = ({ user, soundEnabled }) => {
                             setSelectedFile(file);
                             if (soundEnabled) playClick();
                           }}
-                          className="text-green-500 hover:text-green-400"
+                          className="p-2 text-white/50 hover:text-[#d4af37] transition-colors"
                           title="View"
                           data-testid={`view-${file.id}`}
                         >
-                          <Eye size={14} />
+                          <Eye size={16} />
                         </button>
-                        <button
-                          onClick={() => handleDelete(file.id)}
-                          className="text-red-500 hover:text-red-400"
-                          title="Delete"
-                          data-testid={`delete-${file.id}`}
-                        >
-                          <Trash2 size={14} />
-                        </button>
+                        {isAdmin && (
+                          <>
+                            <button
+                              onClick={() => handleEdit(file)}
+                              className="p-2 text-white/50 hover:text-[#d4af37] transition-colors"
+                              title="Edit"
+                            >
+                              <Edit2 size={16} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(file.id)}
+                              className="p-2 text-white/50 hover:text-red-500 transition-colors"
+                              title="Delete"
+                              data-testid={`delete-${file.id}`}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>

@@ -23,7 +23,7 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
     setIncidentLogs(getIncidentLogs());
     
     // Log user login
-    addIncidentLog(`[INFO] Operative "${user.operativeId}" authenticated - Clearance: ${user.clearanceLevel}`, 'info');
+    addIncidentLog(`[INFO] Operative "${user.displayName}" authenticated - Clearance: ${user.clearanceLevel}`, 'info');
     
     // Random warning popup
     const warningInterval = setInterval(() => {
@@ -65,14 +65,14 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
             <PersonnelRoster />
             <div className="owl-panel">
               <div className="owl-panel-header">
-                <span className="text-xs uppercase tracking-wider flex items-center gap-2">
+                <span className="text-sm uppercase tracking-wider flex items-center gap-2">
                   <Shield size={14} /> System Status
                 </span>
               </div>
-              <div className="owl-panel-content text-xs space-y-2">
+              <div className="owl-panel-content text-sm space-y-3">
                 <div className="flex justify-between">
                   <span>Network Status:</span>
-                  <span className="text-green-400">SECURE</span>
+                  <span className="text-white">SECURE</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Threat Level:</span>
@@ -92,7 +92,7 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
                 </div>
                 <div className="flex justify-between">
                   <span>Encryption:</span>
-                  <span className="text-green-400">AES-256</span>
+                  <span className="text-white">AES-256</span>
                 </div>
               </div>
             </div>
@@ -116,29 +116,29 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#020202] text-green-500 crt-screen" data-testid="dashboard">
+    <div className="min-h-screen bg-[#020202] text-white crt-screen" data-testid="dashboard">
       <div className="crt-scanlines"></div>
       
       {/* Warning popup */}
       {showWarning && (
         <div className="fixed top-4 right-4 z-50 border border-red-500 bg-black p-4 max-w-sm" data-testid="warning-popup">
-          <div className="text-red-500 text-xs font-bold mb-1 flex items-center gap-2">
+          <div className="text-red-500 text-sm font-bold mb-1 flex items-center gap-2">
             <Shield size={14} /> SECURITY ALERT
           </div>
-          <div className="text-red-400 text-xs">
-            Anomalous activity detected in Sector 7. All personnel on standby.
+          <div className="text-red-400 text-sm">
+            Hostile activity detected in Northern sector. All personnel on standby.
           </div>
         </div>
       )}
 
       {/* Header */}
-      <header className="border-b border-green-500/30 bg-black/80 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-3">
+      <header className="border-b border-white/30 bg-black/80 sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Logo */}
             <div className="flex items-center gap-3">
               <div 
-                className="lotus-emblem w-10 h-10 flex items-center justify-center border border-green-500 text-lg font-bold cursor-pointer"
+                className="lotus-emblem w-12 h-12 flex items-center justify-center border border-white text-xl font-bold cursor-pointer"
                 onClick={() => {
                   if (soundEnabled) playClick();
                   setGlitchIntensity(prev => prev === 1 ? 2 : 1);
@@ -148,16 +148,16 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
                 白
               </div>
               <div>
-                <div className="text-sm font-bold tracking-wider">ORDER OF THE WHITE LOTUS</div>
-                <div className="text-xs text-green-500/60">Masquerade Initiative Terminal</div>
+                <div className="text-base font-bold tracking-wider">ORDER OF THE WHITE LOTUS</div>
+                <div className="text-sm text-white/60">Masquerade Initiative Terminal</div>
               </div>
             </div>
 
             {/* User info & controls */}
             <div className="flex items-center gap-4">
-              <div className="text-right text-xs hidden sm:block">
-                <div>Operative: <span className="text-green-400">{user.operativeId}</span></div>
-                <div>Clearance: <span className="text-yellow-500">{user.clearanceLevel}</span></div>
+              <div className="text-right text-sm hidden sm:block">
+                <div>Operative: <span className="text-white font-bold">{user.displayName}</span></div>
+                <div>Clearance: <span className="text-yellow-500 font-bold">{user.clearanceLevel}</span></div>
               </div>
               <button
                 onClick={toggleSound}
@@ -165,7 +165,7 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
                 title={soundEnabled ? 'Mute sounds' : 'Enable sounds'}
                 data-testid="sound-toggle"
               >
-                {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
               </button>
               <button
                 onClick={() => {
@@ -176,7 +176,7 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
                 title="Logout"
                 data-testid="logout-btn"
               >
-                <LogOut size={16} />
+                <LogOut size={18} />
               </button>
             </div>
           </div>
@@ -184,7 +184,7 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
       </header>
 
       {/* Navigation */}
-      <nav className="border-b border-green-500/20 bg-black/60 overflow-x-auto">
+      <nav className="border-b border-white/20 bg-black/60 overflow-x-auto">
         <div className="container mx-auto px-4">
           <div className="flex gap-1">
             {navItems.map(item => (
@@ -194,7 +194,7 @@ const Dashboard = ({ user, onLogout, soundEnabled, toggleSound }) => {
                 className={`nav-link flex items-center gap-2 whitespace-nowrap ${activeSection === item.id ? 'active' : ''}`}
                 data-testid={`nav-${item.id}`}
               >
-                <item.icon size={14} />
+                <item.icon size={16} />
                 <span className="hidden sm:inline">{item.label}</span>
               </button>
             ))}
