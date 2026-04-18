@@ -1,0 +1,100 @@
+{
+  "theme": "dark",
+  "archetype": "Retro-Futurism (Terminal/SCP Style)",
+  "global_design_rules": {
+    "border_radius": "0px (Sharp edges only, no rounded corners)",
+    "shadows": "Text shadows for glowing effects, no soft box-shadows. Use sharp 1px borders instead.",
+    "transitions": "Instant or stepped/glitchy transitions. Avoid overly smooth modern eases unless for CRT fade.",
+    "surface_strategy": "Terminal Window Layout: Flat black backgrounds with 1px high-contrast green or white borders.",
+    "accessibility": "High contrast green/white on pitch black."
+  },
+  "typography": {
+    "primary_heading": {
+      "family": "JetBrains Mono, VT323, or Space Mono",
+      "style": "uppercase, tracking-[0.2em], text-green-500",
+      "sizes": "text-2xl sm:text-3xl lg:text-4xl"
+    },
+    "body": {
+      "family": "JetBrains Mono or Space Mono",
+      "sizes": "text-xs sm:text-sm md:text-base",
+      "style": "leading-relaxed text-green-400 or text-zinc-300"
+    },
+    "accent_labels": {
+      "style": "uppercase, tracking-widest, text-xs text-red-500 font-bold"
+    }
+  },
+  "colors": {
+    "background": "#020202",
+    "surface": "#0a0a0a",
+    "surface_glass": "rgba(10, 10, 10, 0.8)",
+    "primary": "#35e279",
+    "primary_hover": "#4af626",
+    "secondary": "#f4f4f5",
+    "warning_red": "#ff2a2a",
+    "border": "rgba(53, 226, 121, 0.4)",
+    "border_dim": "rgba(53, 226, 121, 0.15)",
+    "redaction_block": "#d4d4d8"
+  },
+  "visual_enhancers": {
+    "crt_scanlines": "MANDATORY: Fixed fullscreen pointer-events-none overlay with repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 4px) and subtle flicker animation.",
+    "glitch_effect": "Text shadows (e.g., 2px 0 red, -2px 0 blue) and brief keyframe translations for critical alerts.",
+    "redaction_bars": "Use <span className=\"bg-zinc-300 text-transparent hover:bg-transparent hover:text-zinc-300 px-1 selection:bg-red-500\">[REDACTED]</span> for interactive un-redacting, or purely solid blocks (█████).",
+    "typing_animation": "Use framer-motion or pure CSS step animations to reveal text sequentially in boot sequences and terminal outputs."
+  },
+  "components": {
+    "buttons": "Flat design. border border-green-500 text-green-500 bg-black px-4 py-2 hover:bg-green-500 hover:text-black transition-colors duration-75 uppercase text-sm tracking-wider. Add terminal 'click' sound on click.",
+    "inputs": "bg-transparent border-b border-green-500/50 focus:border-green-500 outline-none text-green-400 font-mono py-1 px-2. No rounded corners.",
+    "panels_windows": "Draggable/resizable dashboard widgets. Must have a header bar (bg-green-500/10 border-b border-green-500/50 p-1 flex justify-between items-center text-xs) and content area (p-4 border border-green-500/30 bg-black/80 backdrop-blur-sm).",
+    "terminal_console": "A specific widget with a log history array and an input line (prefixed with 'OWL-SYS> ').",
+    "data_table": "Case files list. border-collapse, border border-green-500/20. th and td should have 1px borders. Text size xs or sm."
+  },
+  "specific_sections": {
+    "boot_sequence": {
+      "concept": "Full screen overlay on first load. Prints 'BE INFORMED. BE ENLIGHTENED.', 'Connecting to Site-416...', 'Verifying Clearance...'. Fake loading bar [||||||||  ]. Followed by fake login screen.",
+      "behavior": "Unmounts or hides after successful fake login."
+    },
+    "login_screen": {
+      "concept": "Centered terminal prompt asking for 'Operative ID' and 'Clearance Code'. Flashes red 'ACCESS DENIED' on initial false attempts, then allows entry on submit.",
+      "fields": "Operative ID, Clearance Code."
+    },
+    "dashboard_layout": {
+      "concept": "Post-login. A masonry or grid of draggable/resizable terminal windows (Incident Logs, Live Operations Map, Command Terminal, Personnel).",
+      "tools_to_use": "react-rnd (if adding package) or framer-motion drag constraints, or fallback to a static CSS grid with a 'drag handle' aesthetic if draggable is too complex."
+    },
+    "case_files_crud": {
+      "concept": "Form to submit anomalous reports, saves to localStorage. Fields: Title, Operative Name, Date, Classification (Safe/Euclid/Keter/OWL Levels), Description.",
+      "display": "Terminal-style table/list below the form."
+    }
+  },
+  "lore_assets": {
+    "organization": "Order of the White Lotus (OWL)",
+    "motto": "BE INFORMED. BE ENLIGHTENED.",
+    "subdivisions": ["Ground Team Division", "Iron Lotus Battalion", "Mortician Wing", "Masquerade Initiative"],
+    "ranks": ["E1-E8 (Enlisted)", "O1-O6 (Officer)"],
+    "entities": ["The Merchant (Founder)", "The Messenger (Anomalous Entity)"],
+    "rivals": ["Ordo Divinus", "Sons of the Allfather"]
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1765445774011-7836c57d4be3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwxfHxkYXJrJTIwc3RhdGljJTIwbm9pc2UlMjBnbGl0Y2glMjB0ZXh0dXJlfGVufDB8fHx8MTc3NjQ4NjE1M3ww&ixlib=rb-4.1.0&q=85",
+        "category": "background_texture",
+        "description": "Abstract dark background with white geometric shapes (Use for classified document backgrounds or glitch overlays)"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1661115111416-024117fe1326?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwxfHxjcmVlcHklMjBkYXJrJTIwc2lsaG91ZXR0ZSUyMGVudGl0eXxlbnwwfHx8fDE3NzY0ODYxNTN8MA&ixlib=rb-4.1.0&q=85",
+        "category": "entity_dossier",
+        "description": "Creepy dark silhouette in snow (Use for 'The Messenger' anomalous entity file or Rival dossiers)"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the black, green, and red color scheme. Do not introduce modern gradients, glassmorphism (unless very subtle dark blur), or rounded corners.",
+    "Implement the CRT scanline effect using pure CSS on a fixed overlay.",
+    "Ensure the Boot Sequence is highly immersive, using intervals or timeouts to print text sequentially.",
+    "For draggable dashboard windows, consider using 'framer-motion' with drag constraints or a dedicated library like 'react-rnd'. If native drag is built, ensure z-index management on active windows.",
+    "Use 'lucide-react' for minimal icons (Terminal, Shield, FileText, Skull, Cpu).",
+    "Ensure all interactive elements have data-testid attributes for testing.",
+    "Store Case Files in localStorage under the key 'owl_case_files'. Pre-populate it with 2-3 creepy lore entries (e.g., about The Messenger)."
+  ]
+}
